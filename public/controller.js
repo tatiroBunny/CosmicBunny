@@ -9,7 +9,8 @@ const hudId = session.hudId;
 
 socket.emit("joinHUD", hudId);
 
-document.getElementById("applyBtn").onclick = () => {
+/* ===== APLICAR ===== */
+document.getElementById("applyBtn").addEventListener("click", () => {
   const state = {
     name: charName.value || "Sem Nome",
     level: Number(charLevel.value) || 1,
@@ -18,18 +19,16 @@ document.getElementById("applyBtn").onclick = () => {
     vidaMax: Number(vidaMax.value),
 
     manaAtual: Number(manaAtual.value),
-    manaMax: Number(manaMax.value)
-  avatar: "https://SEU_LINK_DA_IMAGEM.png"
-theme: document.getElementById("theme")?.value || "dark",
+    manaMax: Number(manaMax.value),
 
-  
+    theme: document.getElementById("theme")?.value || "dark"
   };
 
   socket.emit("updateState", { hudId, state });
-};
+});
 
-document.getElementById("openHudBtn").onclick = () => {
-  window.open(`hud.html?id=${hudId}`, "_blank");
-};
-
-
+/* ===== ABRIR HUD ===== */
+document.getElementById("openHudBtn").addEventListener("click", () => {
+  const url = `hud.html?id=${encodeURIComponent(hudId)}`;
+  window.open(url, "_blank");
+});
