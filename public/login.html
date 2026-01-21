@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
   <title>Login</title>
@@ -9,24 +9,35 @@
 
 <div class="box">
   <h1>C.O.S.M.I.C</h1>
-  <input id="name" placeholder="Nome do usuário">
+
+  <!-- Nome do jogador -->
+  <input id="username" placeholder="Nome do jogador">
+
+  <!-- ID do HUD -->
   <input id="hudId" placeholder="ID do HUD (ex: leafone)">
-  <button onclick="login()">Entrar</button>
+
+  <button id="loginBtn">Entrar</button>
 </div>
 
 <script>
-function login() {
-  const user = name.value.trim();
-  const id = hudId.value.trim();
+document.getElementById("loginBtn").onclick = () => {
+  const user = document.getElementById("username").value.trim();
+  const hudId = document.getElementById("hudId").value.trim();
 
-  if (!user || !id) {
-    alert("Preencha tudo");
+  if (!user || !hudId) {
+    alert("Preencha o nome e o ID do HUD");
     return;
   }
 
-  localStorage.setItem("COSMIC_USER", JSON.stringify({ user, hudId: id }));
+  // salva sessão
+  localStorage.setItem("COSMIC_SESSION", JSON.stringify({
+    user,
+    hudId
+  }));
+
+  // vai para o controller
   window.location.href = "controller.html";
-}
+};
 </script>
 
 </body>
