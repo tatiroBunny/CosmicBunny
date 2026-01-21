@@ -13,12 +13,10 @@ const io = new Server(server);
 
 app.use(express.static(path.join(__dirname, "public")));
 
-/* ===============================
-   ESTADO GLOBAL POR HUD ID
-================================ */
 const hudStates = {};
 
 io.on("connection", socket => {
+
   socket.on("joinHUD", hudId => {
     socket.join(hudId);
     if (hudStates[hudId]) {
@@ -30,9 +28,10 @@ io.on("connection", socket => {
     hudStates[hudId] = state;
     socket.to(hudId).emit("stateSync", state);
   });
+
 });
 
 const PORT = process.env.PORT || 3000;
-server.listen(PORT, () =>
-  console.log("🔥 Cosmic Bunny online na porta", PORT)
-);
+server.listen(PORT, () => {
+  console.log("🔥 Cosmic Bunny online na porta", PORT);
+});
