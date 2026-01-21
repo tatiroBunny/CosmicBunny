@@ -1,21 +1,25 @@
+const session = JSON.parse(localStorage.getItem("COSMIC_SESSION"));
+
+if (!session) {
+  window.location.href = "login.html";
+}
+
 const socket = io();
-const session = JSON.parse(localStorage.getItem("COSMIC_USER"));
 const hudId = session.hudId;
 
 socket.emit("joinHUD", hudId);
 
-function aplicar() {
+document.getElementById("applyBtn").onclick = () => {
   const state = {
-    vidaAtual: +vidaAtual.value,
-    vidaMax: +vidaMax.value,
-    manaAtual: +manaAtual.value,
-    manaMax: +manaMax.value
+    vidaAtual: Number(vidaAtual.value),
+    vidaMax: Number(vidaMax.value),
+    manaAtual: Number(manaAtual.value),
+    manaMax: Number(manaMax.value)
   };
 
   socket.emit("updateState", { hudId, state });
-}
+};
 
-function abrirHUD() {
+document.getElementById("openHudBtn").onclick = () => {
   window.open(`hud.html?id=${hudId}`, "_blank");
-}
-
+};
