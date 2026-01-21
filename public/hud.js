@@ -7,23 +7,33 @@ socket.emit("joinHUD", hudId);
 
 socket.on("stateSync", state => {
 
-  // Nome e nível
-  hudName.textContent = state.name;
-  hudLevel.textContent = `Nv ${state.level}`;
+  /* ===== NOME E NÍVEL (COM FALLBACK) ===== */
+  const nome = state.name ?? "Sem Nome";
+  const nivel = Number.isFinite(state.level) ? state.level : 1;
 
-  // Texto
-  vidaText.textContent = `${state.vidaAtual}/${state.vidaMax}`;
-  manaText.textContent = `${state.manaAtual}/${state.manaMax}`;
+  hudName.textContent = nome;
+  hudLevel.textContent = `Nv ${nivel}`;
 
-  // Barra de vida
-  const percent = (state.vidaAtual / state.vidaMax) * 100;
+  /* ===== VIDA ===== */
+  const vidaAtual = Number(state.vidaAtual) || 0;
+  const vidaMax = Number(state.vidaMax) || 1;
+
+  vidaText.textContent = `${vidaAtual}/${vidaMax}`;
+
+  const percent = Math.max(0, Math.min(100, (vidaAtual / vidaMax) * 100));
   vidaFill.style.width = `${percent}%`;
 
-  // Animações
+  /* ===== MANA ===== */
+  const manaAtual = Number(state.manaAtual) || 0;
+  const manaMax = Number(state.manaMax) || 0;
+
+  manaText.textContent = `${manaAtual}/${manaMax}`;
+
+  /* ===== ANIMAÇÕES ===== */
   if (lastHP !== null) {
-    if (state.vidaAtual < lastHP) {
+    if (vidaAtual < lastHP) {
       hud.classList.add("hud-damage");
-    } else if (state.vidaAtual > lastHP) {
+    } else if (vidaAtual > lastHP) {
       hud.classList.add("hud-heal");
     }
 
@@ -32,5 +42,5 @@ socket.on("stateSync", state => {
     }, 600);
   }
 
-  lastHP = state.vidaAtual;
+  lastHP = vidaAtual;
 });
