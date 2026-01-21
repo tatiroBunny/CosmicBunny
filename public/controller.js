@@ -1,34 +1,47 @@
-const session = JSON.parse(localStorage.getItem("COSMIC_SESSION"));
+/* ===== SESSÃO ===== */
+const sessionRaw = localStorage.getItem("COSMIC_SESSION");
 
-if (!session) {
+if (!sessionRaw) {
+  alert("Sessão não encontrada, voltando ao login.");
   window.location.href = "login.html";
 }
 
-const socket = io();
+const session = JSON.parse(sessionRaw);
 const hudId = session.hudId;
 
+/* ===== SOCKET ===== */
+const socket = io();
 socket.emit("joinHUD", hudId);
 
+/* ===== ELEMENTOS (BLINDADO) ===== */
+const openHudBtn = document.getElementById("openHudBtn");
+const applyBtn = document.getElementById("applyBtn");
+
+if (!openHudBtn || !applyBtn) {
+  console.error("Botões não encontrados no DOM");
+}
+
+/* ===== ABRIR HUD ===== */
+openHudBtn.addEventListener("click", () => {
+  const url = `hud.html?id=${encodeURIComponent(hudId)}`;
+  console.log("Abrindo HUD:", url);
+  window.open(url, "_blank");
+});
+
 /* ===== APLICAR ===== */
-document.getElementById("applyBtn").addEventListener("click", () => {
+applyBtn.addEventListener("click", () => {
   const state = {
-    name: charName.value || "Sem Nome",
-    level: Number(charLevel.value) || 1,
+    name: document.getElementById("charName").value || "Sem Nome",
+    level: Number(document.getElementById("charLevel").value) || 1,
 
-    vidaAtual: Number(vidaAtual.value),
-    vidaMax: Number(vidaMax.value),
+    vidaAtual: Number(document.getElementById("vidaAtual").value),
+    vidaMax: Number(document.getElementById("vidaMax").value),
 
-    manaAtual: Number(manaAtual.value),
-    manaMax: Number(manaMax.value),
+    manaAtual: Number(document.getElementById("manaAtual").value),
+    manaMax: Number(document.getElementById("manaMax").value),
 
-    theme: document.getElementById("theme")?.value || "dark"
+    theme: document.getElementById("theme").value || "dark"
   };
 
   socket.emit("updateState", { hudId, state });
-});
-
-/* ===== ABRIR HUD ===== */
-document.getElementById("openHudBtn").addEventListener("click", () => {
-  const url = `hud.html?id=${encodeURIComponent(hudId)}`;
-  window.open(url, "_blank");
 });
