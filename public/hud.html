@@ -5,28 +5,36 @@
   <title>HUD</title>
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body class="hud-body">
 
-<div class="hud" id="hud">
+<div class="hud-compact" id="hud">
 
-  <div class="hud-header">
-    <div id="hudName">Nome</div>
-    <div id="hudLevel">Nv 1</div>
+  <!-- AVATAR -->
+  <div class="avatar-wrap">
+    <img id="avatarImg" src="" alt="avatar">
+    <div class="level-badge" id="hudLevel">1</div>
   </div>
 
-  <!-- VIDA -->
-  <div class="vida-text" id="vidaText">0/0</div>
-  <div class="vida-bar">
-    <div class="vida-fill" id="vidaFill"></div>
-  </div>
+  <!-- INFO -->
+  <div class="hud-info">
+    <div class="hud-name" id="hudName">Nome</div>
 
-  <!-- MANA -->
-  <div class="mana-text" id="manaText">0/0</div>
+    <!-- VIDA -->
+    <div class="vida-row">
+      <span class="vida-text" id="vidaText">0/0</span>
+      <div class="vida-bar">
+        <div class="vida-fill" id="vidaFill"></div>
+      </div>
+    </div>
+
+    <!-- MANA -->
+    <div class="mana-text" id="manaText">0/0</div>
+  </div>
 
 </div>
 
 <script src="/socket.io/socket.io.js"></script>
 <script src="hud.js"></script>
-
 </body>
 </html>
