@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
   <title>Controller</title>
@@ -8,16 +8,27 @@
 <body>
 
 <div class="box">
+
   <h2>Controller</h2>
 
-  <input id="vidaAtual" type="number" placeholder="Vida Atual">
-  <input id="vidaMax" type="number" placeholder="Vida Máx">
+  <!-- ATALHOS -->
+  <div class="action-bar">
+    <button class="action-btn" onclick="location.href='ficha.html'">📜 Ficha</button>
+    <button class="action-btn" onclick="location.href='mestre.html'">🎩 Mestre</button>
+    <button class="action-btn" id="openHudBtn">👁 HUD</button>
+  </div>
 
-  <input id="manaAtual" type="number" placeholder="Mana Atual">
-  <input id="manaMax" type="number" placeholder="Mana Máx">
+  <!-- STATUS -->
+  <div class="controller-grid">
+    <input id="vidaAtual" type="number" placeholder="Vida Atual">
+    <input id="vidaMax" type="number" placeholder="Vida Máx">
 
-  <button id="applyBtn">Aplicar</button>
-  <button id="openHudBtn">Abrir HUD</button>
+    <input id="manaAtual" type="number" placeholder="Mana Atual">
+    <input id="manaMax" type="number" placeholder="Mana Máx">
+  </div>
+
+  <button id="applyBtn">✔ Aplicar</button>
+
 </div>
 
 <script src="/socket.io/socket.io.js"></script>
