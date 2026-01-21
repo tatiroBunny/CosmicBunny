@@ -1,43 +1,32 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html>
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div class="login-box">
+<div class="box">
   <h1>C.O.S.M.I.C</h1>
-
-  <input id="usernameInput"
-         placeholder="Nome do usuário"
-         aria-label="Nome do usuário">
-
-  <select id="roleSelect" aria-label="Tipo de perfil">
-    <option value="player">Jogador</option>
-    <option value="master">Mestre</option>
-  </select>
-
-  <button id="loginBtn">Entrar</button>
+  <input id="name" placeholder="Nome do usuário">
+  <input id="hudId" placeholder="ID do HUD (ex: leafone)">
+  <button onclick="login()">Entrar</button>
 </div>
 
 <script>
-loginBtn.onclick = () => {
-  const user = usernameInput.value.trim();
-  if (!user) {
-    alert("Digite um nome");
+function login() {
+  const user = name.value.trim();
+  const id = hudId.value.trim();
+
+  if (!user || !id) {
+    alert("Preencha tudo");
     return;
   }
 
-  localStorage.setItem("session", JSON.stringify({
-    user,
-    role: roleSelect.value
-  }));
-
+  localStorage.setItem("COSMIC_USER", JSON.stringify({ user, hudId: id }));
   window.location.href = "controller.html";
-};
+}
 </script>
 
 </body>
