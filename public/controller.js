@@ -1,36 +1,21 @@
-// controller.js
-import { state, updateState } from "./shared-socket.js";
+const socket = io();
+const session = JSON.parse(localStorage.getItem("COSMIC_USER"));
+const hudId = session.hudId;
 
-window.applyStatus = () => {
-  updateState({
-    vida: {
-      atual: Number(document.getElementById("vidaAtual").value),
-      max: Number(document.getElementById("vidaMax").value)
-    },
-    mana: {
-      atual: Number(document.getElementById("manaAtual").value),
-      max: Number(document.getElementById("manaMax").value)
-    }
-  });
-};
+socket.emit("joinHUD", hudId);
 
-window.rolarDado = () => {
-  const faces = Number(document.getElementById("dadoTipo").value.replace("d",""));
-  const qtd = Number(document.getElementById("dadoQtd").value);
+function aplicar() {
+  const state = {
+    vidaAtual: +vidaAtual.value,
+    vidaMax: +vidaMax.value,
+    manaAtual: +manaAtual.value,
+    manaMax: +manaMax.value
+  };
 
-  const resultados = Array.from({ length: qtd }, () =>
-    Math.floor(Math.random() * faces) + 1
-  );
+  socket.emit("updateState", { hudId, state });
+}
 
-  updateState({
-    dado: {
-      faces,
-      resultados,
-      timestamp: Date.now()
-    }
-  });
-};
+function abrirHUD() {
+  window.open(`hud.html?id=${hudId}`, "_blank");
+}
 
-window.abrirHUD = () => {
-  window.open("/hud.html", "HUD", "width=500,height=300");
-};
