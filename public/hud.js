@@ -1,13 +1,32 @@
-const socket = io();
-const hudId = new URLSearchParams(window.location.search).get("id");
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>HUD</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="hud-body">
 
-if (!hudId) {
-  document.body.innerHTML = "HUD ID não informado";
-}
+<div class="hud" id="hud">
 
-socket.emit("joinHUD", hudId);
+  <div class="hud-header">
+    <div id="hudName">Nome</div>
+    <div id="hudLevel">Nv 1</div>
+  </div>
 
-socket.on("stateSync", state => {
-  vida.textContent = `❤️ ${state.vidaAtual}/${state.vidaMax}`;
-  mana.textContent = `🔵 ${state.manaAtual}/${state.manaMax}`;
-});
+  <!-- VIDA -->
+  <div class="vida-text" id="vidaText">0/0</div>
+  <div class="vida-bar">
+    <div class="vida-fill" id="vidaFill"></div>
+  </div>
+
+  <!-- MANA -->
+  <div class="mana-text" id="manaText">0/0</div>
+
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="hud.js"></script>
+
+</body>
+</html>
