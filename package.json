@@ -1,5 +1,5 @@
 {
-  "name": "cris-hud-server",
+  "name": "cosmic-bunny",
   "type": "module",
   "scripts": {
     "start": "node server.js"
@@ -9,3 +9,4 @@
     "socket.io": "^4.7.2"
   }
 }
+
