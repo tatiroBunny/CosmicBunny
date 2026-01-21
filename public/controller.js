@@ -19,6 +19,8 @@ document.getElementById("applyBtn").onclick = () => {
 
     manaAtual: Number(manaAtual.value),
     manaMax: Number(manaMax.value)
+  avatar: "https://SEU_LINK_DA_IMAGEM.png"
+
   };
 
   socket.emit("updateState", { hudId, state });
@@ -27,3 +29,4 @@ document.getElementById("applyBtn").onclick = () => {
 document.getElementById("openHudBtn").onclick = () => {
   window.open(`hud.html?id=${hudId}`, "_blank");
 };
+
