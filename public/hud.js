@@ -7,7 +7,7 @@ socket.emit("joinHUD", hudId);
 
 socket.on("stateSync", state => {
 
-  /* ===== NOME E NÍVEL (COM FALLBACK) ===== */
+  /* ===== IDENTIDADE ===== */
   const nome = state.name ?? "Sem Nome";
   const nivel = Number.isFinite(state.level) ? state.level : 1;
 
@@ -23,13 +23,19 @@ socket.on("stateSync", state => {
   const percent = Math.max(0, Math.min(100, (vidaAtual / vidaMax) * 100));
   vidaFill.style.width = `${percent}%`;
 
+  /* ===== VIDA CRÍTICA (<30%) ===== */
+  const isCritical = percent <= 30;
+
+  hud.classList.toggle("hud-critical", isCritical);
+  vidaFill.classList.toggle("vida-critical", isCritical);
+
   /* ===== MANA ===== */
   const manaAtual = Number(state.manaAtual) || 0;
   const manaMax = Number(state.manaMax) || 0;
 
   manaText.textContent = `${manaAtual}/${manaMax}`;
 
-  /* ===== ANIMAÇÕES ===== */
+  /* ===== DANO / CURA ===== */
   if (lastHP !== null) {
     if (vidaAtual < lastHP) {
       hud.classList.add("hud-damage");
@@ -39,7 +45,7 @@ socket.on("stateSync", state => {
 
     setTimeout(() => {
       hud.classList.remove("hud-damage", "hud-heal");
-    }, 600);
+    }, 500);
   }
 
   lastHP = vidaAtual;
