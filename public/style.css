@@ -549,6 +549,27 @@ input, select {
 .box {
   gap: 12px;
 }
+/* =========================
+   THEMES
+========================= */
+
+body[data-theme="blood"] {
+  --accent: crimson;
+}
+
+body[data-theme="arcane"] {
+  --accent: #7f5af0;
+}
+
+body[data-theme="dark"] {
+  --accent: #999;
+}
+
+/* HUD usa variável */
+#vida {
+  color: var(--accent);
+}
+
 
 
 
