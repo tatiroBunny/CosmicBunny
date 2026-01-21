@@ -159,8 +159,8 @@ button:hover {
 }
 
 .vida-bar {
-  width: 100%;
-  height: 10px;
+  width: 30%;
+  height: 15px;
   background: #2a0606;
   border-radius: 6px;
   overflow: hidden;
@@ -201,4 +201,5 @@ button:hover {
 .hud-heal {
   animation: healGlow .6s;
 }
+
 
