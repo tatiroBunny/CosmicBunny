@@ -8,11 +8,13 @@ socket.emit("joinHUD", hudId);
 socket.on("stateSync", state => {
 
   /* ===== IDENTIDADE ===== */
-  const nome = state.name ?? "Sem Nome";
-  const nivel = Number.isFinite(state.level) ? state.level : 1;
+  hudName.textContent = state.name ?? "Sem Nome";
+  hudLevel.textContent = Number.isFinite(state.level) ? state.level : 1;
 
-  hudName.textContent = nome;
-  hudLevel.textContent = `Nv ${nivel}`;
+  /* AVATAR */
+  if (state.avatar) {
+    avatarImg.src = state.avatar;
+  }
 
   /* ===== VIDA ===== */
   const vidaAtual = Number(state.vidaAtual) || 0;
@@ -23,11 +25,11 @@ socket.on("stateSync", state => {
   const percent = Math.max(0, Math.min(100, (vidaAtual / vidaMax) * 100));
   vidaFill.style.width = `${percent}%`;
 
-  /* ===== VIDA CRÍTICA (<30%) ===== */
-  const isCritical = percent <= 30;
+  /* ===== CRÍTICO EXTREMO (<10%) ===== */
+  const extremeCritical = percent <= 10;
 
-  hud.classList.toggle("hud-critical", isCritical);
-  vidaFill.classList.toggle("vida-critical", isCritical);
+  hud.classList.toggle("hud-extreme", extremeCritical);
+  vidaFill.classList.toggle("vida-extreme", extremeCritical);
 
   /* ===== MANA ===== */
   const manaAtual = Number(state.manaAtual) || 0;
@@ -45,7 +47,7 @@ socket.on("stateSync", state => {
 
     setTimeout(() => {
       hud.classList.remove("hud-damage", "hud-heal");
-    }, 500);
+    }, 400);
   }
 
   lastHP = vidaAtual;
