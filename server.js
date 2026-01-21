@@ -13,33 +13,26 @@ const io = new Server(server);
 
 app.use(express.static(path.join(__dirname, "public")));
 
-const PORT = process.env.PORT || 3000;
+/* ===============================
+   ESTADO GLOBAL POR HUD ID
+================================ */
+const hudStates = {};
 
-// Estado em memória (por enquanto)
-const characters = {};
-
-// SOCKET.IO
 io.on("connection", socket => {
-  console.log("🔗 Conectado:", socket.id);
-
-  socket.on("joinCharacter", charId => {
-    socket.join(charId);
-
-    if (characters[charId]) {
-      socket.emit("syncState", characters[charId]);
+  socket.on("joinHUD", hudId => {
+    socket.join(hudId);
+    if (hudStates[hudId]) {
+      socket.emit("stateSync", hudStates[hudId]);
     }
   });
 
-  socket.on("updateState", ({ charId, data }) => {
-    characters[charId] = data;
-    socket.to(charId).emit("stateUpdated", data);
-  });
-
-  socket.on("rollDice", ({ charId, result }) => {
-    socket.to(charId).emit("diceResult", result);
+  socket.on("updateState", ({ hudId, state }) => {
+    hudStates[hudId] = state;
+    socket.to(hudId).emit("stateSync", state);
   });
 });
 
-server.listen(PORT, () => {
-  console.log("🔥 Servidor rodando na porta", PORT);
-});
+const PORT = process.env.PORT || 3000;
+server.listen(PORT, () =>
+  console.log("🔥 Cosmic Bunny online na porta", PORT)
+);
