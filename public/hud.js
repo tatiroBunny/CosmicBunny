@@ -1,32 +1,36 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <title>HUD</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body class="hud-body">
+const socket = io();
+const hudId = new URLSearchParams(window.location.search).get("id");
 
-<div class="hud" id="hud">
+let lastHP = null;
 
-  <div class="hud-header">
-    <div id="hudName">Nome</div>
-    <div id="hudLevel">Nv 1</div>
-  </div>
+socket.emit("joinHUD", hudId);
 
-  <!-- VIDA -->
-  <div class="vida-text" id="vidaText">0/0</div>
-  <div class="vida-bar">
-    <div class="vida-fill" id="vidaFill"></div>
-  </div>
+socket.on("stateSync", state => {
 
-  <!-- MANA -->
-  <div class="mana-text" id="manaText">0/0</div>
+  // Nome e nível
+  hudName.textContent = state.name;
+  hudLevel.textContent = `Nv ${state.level}`;
 
-</div>
+  // Texto
+  vidaText.textContent = `${state.vidaAtual}/${state.vidaMax}`;
+  manaText.textContent = `${state.manaAtual}/${state.manaMax}`;
 
-<script src="/socket.io/socket.io.js"></script>
-<script src="hud.js"></script>
+  // Barra de vida
+  const percent = (state.vidaAtual / state.vidaMax) * 100;
+  vidaFill.style.width = `${percent}%`;
 
-</body>
-</html>
+  // Animações
+  if (lastHP !== null) {
+    if (state.vidaAtual < lastHP) {
+      hud.classList.add("hud-damage");
+    } else if (state.vidaAtual > lastHP) {
+      hud.classList.add("hud-heal");
+    }
+
+    setTimeout(() => {
+      hud.classList.remove("hud-damage", "hud-heal");
+    }, 600);
+  }
+
+  lastHP = state.vidaAtual;
+});
