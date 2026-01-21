@@ -1,9 +1,13 @@
 const socket = io();
 const hudId = new URLSearchParams(window.location.search).get("id");
 
+if (!hudId) {
+  document.body.innerHTML = "HUD ID não informado";
+}
+
 socket.emit("joinHUD", hudId);
 
 socket.on("stateSync", state => {
-  vida.innerText = `❤️ ${state.vidaAtual}/${state.vidaMax}`;
-  mana.innerText = `🔵 ${state.manaAtual}/${state.manaMax}`;
+  vida.textContent = `❤️ ${state.vidaAtual}/${state.vidaMax}`;
+  mana.textContent = `🔵 ${state.manaAtual}/${state.manaMax}`;
 });
