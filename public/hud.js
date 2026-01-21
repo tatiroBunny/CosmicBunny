@@ -2,6 +2,7 @@ const socket = io();
 const hudId = new URLSearchParams(window.location.search).get("id");
 
 let lastHP = null;
+let damageTimeout = null;
 
 socket.emit("joinHUD", hudId);
 
@@ -11,10 +12,10 @@ socket.on("stateSync", state => {
   hudName.textContent = state.name ?? "Sem Nome";
   hudLevel.textContent = Number.isFinite(state.level) ? state.level : 1;
 
-  /* AVATAR */
-  if (state.avatar) {
-    avatarImg.src = state.avatar;
-  }
+  if (state.avatar) avatarImg.src = state.avatar;
+
+  /* ===== TEMA ===== */
+  document.body.dataset.theme = state.theme || "dark";
 
   /* ===== VIDA ===== */
   const vidaAtual = Number(state.vidaAtual) || 0;
@@ -23,32 +24,25 @@ socket.on("stateSync", state => {
   vidaText.textContent = `${vidaAtual}/${vidaMax}`;
 
   const percent = Math.max(0, Math.min(100, (vidaAtual / vidaMax) * 100));
+
+  /* Barra principal (rápida) */
   vidaFill.style.width = `${percent}%`;
 
-  /* ===== CRÍTICO EXTREMO (<10%) ===== */
-  const extremeCritical = percent <= 10;
+  /* Barra de dano retardado */
+  if (lastHP !== null && vidaAtual < lastHP) {
+    clearTimeout(damageTimeout);
 
-  hud.classList.toggle("hud-extreme", extremeCritical);
-  vidaFill.classList.toggle("vida-extreme", extremeCritical);
+    damageTimeout = setTimeout(() => {
+      vidaDamage.style.width = `${percent}%`;
+    }, 350);
+  } else {
+    vidaDamage.style.width = `${percent}%`;
+  }
+
+  lastHP = vidaAtual;
 
   /* ===== MANA ===== */
   const manaAtual = Number(state.manaAtual) || 0;
   const manaMax = Number(state.manaMax) || 0;
-
   manaText.textContent = `${manaAtual}/${manaMax}`;
-
-  /* ===== DANO / CURA ===== */
-  if (lastHP !== null) {
-    if (vidaAtual < lastHP) {
-      hud.classList.add("hud-damage");
-    } else if (vidaAtual > lastHP) {
-      hud.classList.add("hud-heal");
-    }
-
-    setTimeout(() => {
-      hud.classList.remove("hud-damage", "hud-heal");
-    }, 400);
-  }
-
-  lastHP = vidaAtual;
 });
