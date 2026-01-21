@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Modo Mestre</title>
+  <link rel="stylesheet" href="mestre.css">
+</head>
+<body>
+
+<header class="master-bar">
+  <input id="fichaIdInput" placeholder="ID da ficha">
+  <button onclick="adicionarFicha()">Adicionar</button>
+
+  <input id="filtroInput" placeholder="Filtrar por nome" oninput="renderizar()">
+  <button onclick="voltar()">Voltar</button>
+</header>
+
+<main id="cardsContainer"></main>
+
+<script src="mestre.js"></script>
+</body>
+</html>

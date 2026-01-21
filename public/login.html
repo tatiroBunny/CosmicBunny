@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="login-box">
+  <h1>C.O.S.M.I.C</h1>
+
+  <input id="usernameInput"
+         placeholder="Nome do usuário"
+         aria-label="Nome do usuário">
+
+  <select id="roleSelect" aria-label="Tipo de perfil">
+    <option value="player">Jogador</option>
+    <option value="master">Mestre</option>
+  </select>
+
+  <button id="loginBtn">Entrar</button>
+</div>
+
+<script>
+loginBtn.onclick = () => {
+  const user = usernameInput.value.trim();
+  if (!user) {
+    alert("Digite um nome");
+    return;
+  }
+
+  localStorage.setItem("session", JSON.stringify({
+    user,
+    role: roleSelect.value
+  }));
+
+  window.location.href = "controller.html";
+};
+</script>
+
+</body>
+</html>

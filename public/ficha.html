@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ficha de Personagem</title>
+  <link rel="stylesheet" href="ficha.css">
+</head>
+<body>
+
+<!-- GERENCIADOR -->
+<div class="sheet-manager">
+  <button id="newFichaBtn" title="Criar nova ficha">Nova Ficha</button>
+
+  <label for="fichaSelect" class="sr-only">Selecionar ficha</label>
+  <select id="fichaSelect" title="Selecionar ficha">
+    <option value="">— Selecionar Ficha —</option>
+  </select>
+
+  <button id="deleteFichaBtn" title="Excluir ficha">Excluir</button>
+  <button id="saveFichaBtn" title="Salvar ficha">Salvar Ficha</button>
+</div>
+
+<div class="ficha-id-box">
+  <label for="fichaIdDisplay">ID da Ficha:</label>
+  <input id="fichaIdDisplay" readonly title="ID da ficha">
+  <button onclick="copiarFichaId()" title="Copiar ID da ficha">📋</button>
+</div>
+
+<div class="sheet">
+
+  <!-- TOPO -->
+  <div class="top-bar">
+    <label class="sr-only" for="charName">Nome do personagem</label>
+    <input id="charName" class="top-box left" placeholder="NOME DO PERSONAGEM" title="Nome do personagem">
+
+    <div class="diamond"></div>
+
+    <label class="sr-only" for="charClass">Classe raça e nível</label>
+    <input id="charClass" class="top-box right" placeholder="CLASSE • RAÇA • NÍVEL" title="Classe raça e nível">
+  </div>
+
+  <div class="main">
+
+    <!-- ATRIBUTOS -->
+    <div class="attributes">
+      <div class="attr"><div class="hex"><input id="forInput" type="number" value="10" title="Força"></div><div class="attr-label">FOR</div></div>
+      <div class="attr"><div class="hex"><input id="desInput" type="number" value="10" title="Destreza"></div><div class="attr-label">DES</div></div>
+      <div class="attr"><div class="hex"><input id="conInput" type="number" value="10" title="Constituição"></div><div class="attr-label">CON</div></div>
+      <div class="attr"><div class="hex"><input id="intInput" type="number" value="10" title="Inteligência"></div><div class="attr-label">INT</div></div>
+      <div class="attr"><div class="hex"><input id="sabInput" type="number" value="10" title="Sabedoria"></div><div class="attr-label">SAB</div></div>
+      <div class="attr"><div class="hex"><input id="carInput" type="number" value="10" title="Carisma"></div><div class="attr-label">CAR</div></div>
+    </div>
+
+    <!-- CENTRO -->
+    <div class="center">
+
+      <!-- CA -->
+      <div class="shield ca">
+        <input id="caInput" type="number" value="10" title="Classe de Armadura">
+        <span>CA</span>
+      </div>
+
+      <!-- STATUS -->
+      <div class="status-inline">
+        <div>
+          <label for="vidaMaxInput">Vida Máx</label>
+          <input id="vidaMaxInput" type="number">
+        </div>
+        <div>
+          <label for="manaMaxInput">Mana Máx</label>
+          <input id="manaMaxInput" type="number">
+        </div>
+        <div>
+          <label for="dadoVidaInput">Dado de Vida</label>
+          <input id="dadoVidaInput" type="text" placeholder="d8">
+        </div>
+      </div>
+
+      <!-- PERÍCIAS -->
+      <div class="panel">
+        <div class="panel-title">PERÍCIAS</div>
+        <div class="panel-body skills">
+
+          <!-- FUNÇÃO VISUAL: checkbox | nome | atributo -->
+          <!-- 10 PERÍCIAS -->
+          <!-- esquerda + direita -->
+
+          <!-- COLUNA 1 -->
+          <div class="skills-col">
+            <!-- 1 a 5 -->
+            <!-- repete estrutura -->
+            <!-- exemplo abaixo -->
+            <div class="skill">
+              <input type="checkbox" title="Perícia treinada">
+              <input class="skill-name" placeholder="Nome da Perícia" title="Nome da perícia">
+              <select class="skill-attr" title="Atributo base">
+                <option>FOR</option><option>DES</option><option>CON</option>
+                <option>INT</option><option>SAB</option><option>CAR</option>
+              </select>
+            </div>
+
+            <!-- copia 4x -->
+            <div class="skill"><input type="checkbox" title="Perícia treinada"><input class="skill-name" placeholder="Nome da Perícia" title="Nome da perícia"><select class="skill-attr" title="Atributo base"><option>FOR</option><option>DES</option><option>CON</option><option>INT</option><option>SAB</option><option>CAR</option></select></div>
+            <div class="skill"><input type="checkbox" title="Perícia treinada"><input class="skill-name" placeholder="Nome da Perícia" title="Nome da perícia"><select class="skill-attr" title="Atributo base"><option>FOR</option><option>DES</option><option>CON</option><option>INT</option><option>SAB</option><option>CAR</option></select></div>
+            <div class="skill"><input type="checkbox" title="Perícia treinada"><input class="skill-name" placeholder="Nome da Perícia" title="Nome da perícia"><select class="skill-attr" title="Atributo base"><option>FOR</option><option>DES</option><option>CON</option><option>INT</option><option>SAB</option><option>CAR</option></select></div>
+            <div class="skill"><input type="checkbox" title="Perícia treinada"><input class="skill-name" placeholder="Nome da Perícia" title="Nome da perícia"><select class="skill-attr" title="Atributo base"><option>FOR</option><option>DES</option><option>CON</option><option>INT</option><option>SAB</option><option>CAR</option></select></div>
+          </div>
+
+          <!-- COLUNA 2 -->
+          <div class="skills-col">
+            <div class="skill"><input type="checkbox" title="Perícia treinada"><input class="skill-name" placeholder="Nome da Perícia" title="Nome da perícia"><select class="skill-attr" title="Atributo base"><option>FOR</option><option>DES</option><option>CON</option><option>INT</option><option>SAB</option><option>CAR</option></select></div>
+            <div class="skill"><input type="checkbox" title="Perícia treinada"><input class="skill-name" placeholder="Nome da Perícia" title="Nome da perícia"><select class="skill-attr" title="Atributo base"><option>FOR</option><option>DES</option><option>CON</option><option>INT</option><option>SAB</option><option>CAR</option></select></div>
+            <div class="skill"><input type="checkbox" title="Perícia treinada"><input class="skill-name" placeholder="Nome da Perícia" title="Nome da perícia"><select class="skill-attr" title="Atributo base"><option>FOR</option><option>DES</option><option>CON</option><option>INT</option><option>SAB</option><option>CAR</option></select></div>
+            <div class="skill"><input type="checkbox" title="Perícia treinada"><input class="skill-name" placeholder="Nome da Perícia" title="Nome da perícia"><select class="skill-attr" title="Atributo base"><option>FOR</option><option>DES</option><option>CON</option><option>INT</option><option>SAB</option><option>CAR</option></select></div>
+            <div class="skill"><input type="checkbox" title="Perícia treinada"><input class="skill-name" placeholder="Nome da Perícia" title="Nome da perícia"><select class="skill-attr" title="Atributo base"><option>FOR</option><option>DES</option><option>CON</option><option>INT</option><option>SAB</option><option>CAR</option></select></div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ANOTAÇÕES -->
+      <div class="panel notes">
+        <div class="panel-title">ANOTAÇÕES</div>
+        <div class="panel-body">
+          <textarea id="notasInput" placeholder="Habilidades, traços, efeitos..." title="Anotações da ficha"></textarea>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- INVENTÁRIO -->
+  <div class="panel inventory">
+    <div class="panel-title">INVENTÁRIO</div>
+    <div class="panel-body">
+      <textarea id="inventarioInput" placeholder="Itens, equipamentos, ouro..." title="Inventário"></textarea>
+    </div>
+  </div>
+
+</div>
+
+<script src="ficha.js"></script>
+</body>
+</html>

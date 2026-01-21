@@ -1,0 +1,524 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: radial-gradient(circle at top, #0e0b08, #050403);
+  font-family: 'Cinzel', serif;
+  color: #e6d6b3;
+}
+
+/* CONTAINER */
+
+.sheet {
+  width: 820px;
+  margin: 30px auto;
+}
+
+/* ===== TOPO ===== */
+
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+
+.top-box {
+  border: 2px solid #6b4a1e;
+  background: radial-gradient(circle at top, #1c1813, #070605);
+  padding: 10px 20px;
+  min-width: 260px;
+  text-align: center;
+  font-weight: bold;
+  letter-spacing: 1px;
+  box-shadow:
+    inset 0 0 12px rgba(0,0,0,.8),
+    0 0 20px rgba(0,0,0,.8);
+}
+
+.diamond {
+  width: 38px;
+  height: 38px;
+  border: 2px solid #6b4a1e;
+  background: #050403;
+  transform: rotate(45deg);
+  margin: 0 20px;
+}
+
+/* ===== MAIN ===== */
+
+.main {
+  display: flex;
+  gap: 40px;
+}
+
+/* ===== ATRIBUTOS ===== */
+
+.attributes {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.hex {
+  width: 90px;
+  height: 90px;
+  border: 3px solid #6b4a1e;
+  background: linear-gradient(#0f0c09, #050403);
+  clip-path: polygon(
+    25% 5%,
+    75% 5%,
+    100% 50%,
+    75% 95%,
+    25% 95%,
+    0% 50%
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  letter-spacing: 1px;
+  box-shadow:
+    inset 0 0 12px rgba(0,0,0,.9),
+    0 0 14px rgba(90,60,20,.4);
+}
+
+/* ===== CENTRO ===== */
+
+.center {
+  flex: 1;
+}
+
+/* ===== ESCUDO ===== */
+
+.shield {
+  width: 78px;
+  height: 90px;
+  border: 3px solid #6b4a1e;
+  background: linear-gradient(#0f0c09, #050403);
+  margin-bottom: 20px;
+  clip-path: polygon(
+    50% 0%,
+    90% 20%,
+    90% 60%,
+    50% 100%,
+    10% 60%,
+    10% 20%
+  );
+  box-shadow:
+    inset 0 0 12px rgba(0,0,0,.9),
+    0 0 14px rgba(90,60,20,.4);
+}
+
+/* ===== PAINÉIS ===== */
+
+.panel {
+  border: 2px solid #6b4a1e;
+  background: radial-gradient(circle at top, #1c1813, #070605);
+  box-shadow:
+    inset 0 0 16px rgba(0,0,0,.9),
+    0 0 30px rgba(0,0,0,.9);
+}
+
+.panel-title {
+  background: linear-gradient(180deg, #3b2a12, #140e07);
+  color: #d4af37;
+  padding: 6px;
+  text-align: center;
+  font-weight: bold;
+  letter-spacing: 2px;
+  border-bottom: 1px solid #6b4a1e;
+}
+
+.panel-body {
+  height: 260px;
+}
+
+/* ===== INVENTÁRIO ===== */
+
+.inventory {
+  margin-top: 40px;
+}
+
+.inventory .panel-body {
+  height: 140px;
+}
+/* ===== ATRIBUTOS ===== */
+
+.attr {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.hex input {
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  border: none;
+  text-align: center;
+  font-size: 26px;
+  font-weight: bold;
+  color: #d4af37;
+}
+
+.hex input:focus {
+  outline: none;
+}
+
+.attr-label {
+  margin-top: 6px;
+  font-size: 14px;
+  letter-spacing: 2px;
+}
+
+/* ===== PERÍCIAS ===== */
+
+.skills {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px 20px;
+  padding: 10px;
+  height: 260px;
+}
+
+.skill {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+}
+
+.skill label {
+  cursor: pointer;
+}
+
+.skill span {
+  color: #d4af37;
+  font-size: 12px;
+}
+
+/* CHECKBOX DARK */
+
+.skill input {
+  accent-color: #d4af37;
+}
+
+/* ===== INVENTÁRIO ===== */
+
+textarea {
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  border: none;
+  resize: none;
+  color: #e6d6b3;
+  padding: 10px;
+}
+
+textarea:focus {
+  outline: none;
+}
+/* ===== PERÍCIAS CUSTOM ===== */
+
+.skill.custom {
+  gap: 6px;
+}
+
+.skill-name {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #6b4a1e;
+  color: #e6d6b3;
+  font-family: inherit;
+  font-size: 14px;
+  width: 120px;
+}
+
+.skill-name::placeholder {
+  color: #7a6a4a;
+}
+
+.skill-name:focus {
+  outline: none;
+  border-bottom-color: #d4af37;
+}
+
+.skill-attr {
+  background: transparent;
+  border: none;
+  color: #d4af37;
+  font-size: 12px;
+}
+
+.skill-attr:focus {
+  outline: none;
+}
+/* ===== GRID ESTÁVEL DAS PERÍCIAS ===== */
+
+.skills {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px 24px;
+  padding: 12px;
+}
+
+.skill {
+  display: grid;
+  grid-template-columns: 1fr 42px;
+  align-items: center;
+  font-size: 14px;
+}
+
+.skill.custom {
+  grid-template-columns: 1fr 52px;
+}
+
+.skill-name {
+  width: 120px;
+}
+
+.skill-attr {
+  width: 48px;
+  text-align: center;
+}
+/* ===== CA ===== */
+
+.shield.ca {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.shield.ca input {
+  width: 48px;
+  background: transparent;
+  border: none;
+  text-align: center;
+  font-size: 26px;
+  color: #d4af37;
+}
+
+.shield.ca span {
+  font-size: 12px;
+  letter-spacing: 2px;
+}
+
+/* ===== STATUS ===== */
+
+.status-body {
+  display: flex;
+  justify-content: space-around;
+  padding: 10px;
+}
+
+.status-body div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.status-body input {
+  width: 60px;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #6b4a1e;
+  color: #d4af37;
+  text-align: center;
+}
+
+/* ===== ANOTAÇÕES ===== */
+
+.notes textarea {
+  height: 120px;
+}
+/* ===== STATUS ULTRA COMPACTO ===== */
+
+.panel.status {
+  margin-bottom: 6px;
+}
+
+.panel.status .panel-title {
+  padding: 4px;
+  font-size: 12px;
+}
+
+.status-body {
+  padding: 4px 8px;
+  gap: 6px;
+}
+
+.status-body label {
+  font-size: 10px;
+  letter-spacing: 0.5px;
+}
+
+.status-body input {
+  width: 44px;
+  font-size: 13px;
+  padding: 1px 0;
+}
+
+/* reduz altura geral do painel */
+.panel.status .panel-body {
+  min-height: unset;
+}
+/* ===== STATUS INLINE (SUPER COMPACTO) ===== */
+
+.status-inline {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 6px 0 10px;
+  padding: 6px 10px;
+  border: 1px solid #6b4a1e;
+  background: radial-gradient(circle at top, #1c1813, #070605);
+}
+
+.status-inline div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.status-inline label {
+  font-size: 10px;
+  letter-spacing: 1px;
+}
+
+.status-inline input {
+  width: 46px;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #6b4a1e;
+  color: #d4af37;
+  text-align: center;
+  font-size: 13px;
+}
+/* ===== CORREÇÃO DEFINITIVA DO PAINEL DE PERÍCIAS ===== */
+
+.panel-body.skills {
+  height: auto;              /* remove altura fixa */
+  max-height: 360px;         /* limite visual elegante */
+  overflow-y: auto;          /* scroll interno */
+  padding-right: 6px;
+}
+
+/* scrollbar discreta dark fantasy */
+.panel-body.skills::-webkit-scrollbar {
+  width: 6px;
+}
+
+.panel-body.skills::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.panel-body.skills::-webkit-scrollbar-thumb {
+  background: #6b4a1e;
+  border-radius: 6px;
+}
+/* ===== GERENCIADOR DE FICHAS ===== */
+
+.sheet-manager {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin: 12px 0;
+}
+
+.sheet-manager button,
+.sheet-manager select {
+  background: transparent;
+  border: 1px solid #6b4a1e;
+  color: #d4af37;
+  padding: 4px 10px;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.sheet-manager button:hover,
+.sheet-manager select:hover {
+  background: rgba(212,175,55,0.1);
+}
+/* ===== ID DA FICHA ===== */
+
+.ficha-id-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  margin: 6px 0 12px;
+  font-size: 12px;
+}
+
+.ficha-id-box input {
+  width: 220px;
+  background: transparent;
+  border: 1px solid #6b4a1e;
+  color: #d4af37;
+  text-align: center;
+  font-family: monospace;
+}
+
+.ficha-id-box button {
+  background: transparent;
+  border: 1px solid #6b4a1e;
+  color: #d4af37;
+  cursor: pointer;
+}
+/* === PERÍCIAS – FIX DEFINITIVO === */
+
+.skills {
+  display: flex;
+  gap: 32px;
+}
+
+.skills-col {
+  flex: 1;
+}
+
+.skill {
+  display: grid;
+  grid-template-columns: 18px 1fr 64px;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+/* Checkbox */
+.skill input[type="checkbox"] {
+  width: 14px;
+  height: 14px;
+  margin: 0;
+}
+
+/* Nome da perícia */
+.skill-name {
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #b38a3a;
+  color: #e6c77a;
+  font-size: 13px;
+  padding: 2px 4px;
+}
+
+/* Select do atributo */
+.skill-attr {
+  width: 64px;
+  background: transparent;
+  border: 1px solid #b38a3a;
+  color: #e6c77a;
+  font-size: 12px;
+  padding: 2px;
+  text-align: center;
+}
+
+/* Remove qualquer herança estranha */
+.skill label {
+  display: contents;
+}

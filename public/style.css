@@ -1,0 +1,346 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Cinzel', serif;
+}
+
+/* ================= CONTROLLER ================= */
+
+.controller-bg {
+  background: radial-gradient(circle at top, #0e0b08, #050403);
+  padding: 20px;
+}
+
+.controller {
+  max-width: 360px;
+  background: radial-gradient(circle at top, #1c1813, #070605);
+  border: 1px solid #6b4a1e;
+  border-radius: 16px;
+  padding: 20px;
+  color: #e6d6b3;
+  box-shadow: 0 0 40px rgba(0,0,0,.9),
+              inset 0 0 40px rgba(90,60,20,.25);
+}
+
+/* HEADER */
+
+.controller-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  border: 2px solid #d4af37;
+  background-size: cover;
+  background-position: center;
+  margin-right: 12px;
+  box-shadow: 0 0 14px rgba(212,175,55,.7);
+}
+
+.char-name {
+  background: transparent;
+  border: none;
+  color: #f0e6c8;
+  font-size: 18px;
+  width: 160px;
+}
+
+.char-name:focus {
+  outline: none;
+  border-bottom: 1px solid #d4af37;
+}
+
+.char-level input {
+  width: 60px;
+  background: #120e0a;
+  border: 1px solid #6b4a1e;
+  color: #d4af37;
+  text-align: center;
+}
+
+/* BLOCKS */
+
+.block label {
+  color: #d4af37;
+  letter-spacing: 1px;
+}
+
+.block input,
+.block select {
+  width: 48%;
+  background: linear-gradient(#0f0c09, #050403);
+  border: 1px solid #6b4a1e;
+  color: #f0e6c8;
+  padding: 6px;
+  margin-top: 4px;
+  box-shadow: inset 0 0 8px rgba(0,0,0,.8);
+}
+
+/* BOTÕES */
+
+.controller button {
+  background: linear-gradient(180deg, #3b2a12, #140e07);
+  border: 1px solid #d4af37;
+  color: #f3e3a2;
+  padding: 8px 10px;
+  margin-top: 8px;
+  cursor: pointer;
+  border-radius: 6px;
+  box-shadow: 0 0 10px rgba(212,175,55,.3),
+              inset 0 0 10px rgba(0,0,0,.8);
+}
+
+.controller button:hover {
+  filter: brightness(1.2);
+}
+
+/* ================= HUD ================= */
+
+#hud {
+  position: fixed;
+  left: 40px;
+  bottom: 40px;
+  display: flex;
+  align-items: center;
+  background: rgba(10,8,12,.9);
+  padding: 16px;
+  border-radius: 18px;
+  box-shadow: 0 0 30px rgba(0,0,0,.9);
+}
+
+/* AVATAR */
+
+#avatarHud {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  border: 2px solid #d4af37;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+}
+
+#levelHud {
+  position: absolute;
+  bottom: -6px;
+  right: -6px;
+  background: #050403;
+  border: 1px solid #d4af37;
+  color: #d4af37;
+  font-size: 14px;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* INFO */
+
+#hudInfo {
+  margin-left: 14px;
+}
+
+#name {
+  font-size: 18px;
+  letter-spacing: 2px;
+  color: #e6d6b3;
+}
+
+/* VIDA */
+
+#vidaText {
+  font-size: 34px;
+  color: crimson;
+}
+
+.bar-container {
+  width: 220px;
+  height: 8px;
+  background: #1a0505;
+  border-radius: 6px;
+  overflow: hidden;
+  margin: 6px 0;
+}
+
+.bar.vida {
+  height: 100%;
+  background: linear-gradient(90deg, #400000, crimson);
+  transition: width .6s cubic-bezier(.22,1,.36,1);
+}
+
+/* MANA */
+
+#manaText {
+  font-size: 20px;
+  color: #4fb8ff;
+}
+
+/* ===== HEXÁGONO ARCANO ===== */
+
+#diceContainer {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.diceHex {
+  width: 64px;
+  height: 64px;
+  background: transparent;
+  border: 2px solid #4b1d6b; /* ROXO ESCURO */
+  clip-path: polygon(
+    50% 0%,
+    93% 25%,
+    93% 75%,
+    50% 100%,
+    7% 75%,
+    7% 25%
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  font-weight: bold;
+  color: white;
+  text-shadow:
+    -1px -1px 0 silver,
+     1px -1px 0 silver,
+    -1px  1px 0 silver,
+     1px  1px 0 silver;
+  box-shadow: 0 0 18px rgba(75,29,107,.6);
+}
+
+/* CRÍTICO */
+.diceHex.crit {
+  border-color: gold;
+  color: gold;
+  box-shadow: 0 0 25px gold;
+}
+
+/* FALHA */
+.diceHex.fail {
+  border-color: darkred;
+  color: darkred;
+  box-shadow: 0 0 25px darkred;
+}
+/* ===== ACTION BAR ===== */
+.controller-actions {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.action-btn {
+  background: linear-gradient(145deg, #1c140c, #090604);
+  border: 1px solid #7a5a2e;
+  color: #e6d2a2;
+  font-family: inherit;
+  padding: 6px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: inset 0 0 10px rgba(255,200,120,.15);
+}
+
+.action-btn:hover {
+  background: linear-gradient(145deg, #2a1d10, #0c0804);
+}
+/* =========================
+   HUD – ANIMAÇÕES
+========================= */
+
+@keyframes damageShake {
+  0% { transform: translate(0); }
+  25% { transform: translate(-3px, 2px); }
+  50% { transform: translate(3px, -2px); }
+  75% { transform: translate(-2px, -1px); }
+  100% { transform: translate(0); }
+}
+
+@keyframes healPulse {
+  0% { box-shadow: 0 0 0 rgba(0,255,150,0.0); }
+  50% { box-shadow: 0 0 18px rgba(0,255,150,0.8); }
+  100% { box-shadow: 0 0 0 rgba(0,255,150,0.0); }
+}
+
+@keyframes critGlow {
+  0% { transform: scale(1); box-shadow: 0 0 0 gold; }
+  50% { transform: scale(1.25); box-shadow: 0 0 25px gold; }
+  100% { transform: scale(1); box-shadow: 0 0 10px gold; }
+}
+
+@keyframes failGlitch {
+  0% { transform: translate(0); color: darkred; }
+  25% { transform: translate(-2px, 1px); }
+  50% { transform: translate(2px, -1px); }
+  75% { transform: translate(-1px, -2px); }
+  100% { transform: translate(0); }
+}
+
+/* VIDA */
+.hud-damage {
+  animation: damageShake 0.35s;
+  filter: brightness(1.2);
+}
+
+.hud-heal {
+  animation: healPulse 0.6s;
+}
+
+/* BARRA */
+.hp-bar {
+  transition: width 0.4s ease, opacity 0.3s ease;
+}
+
+/* ESCONDER BARRA */
+.hp-hidden .hp-bar {
+  opacity: 0;
+  transform: scaleX(0);
+}
+
+/* RESULTADO DE DADO */
+.dice-area {
+  display: flex;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.dice-hex {
+  width: 36px;
+  height: 36px;
+  clip-path: polygon(
+    25% 0%, 75% 0%,
+    100% 50%,
+    75% 100%,
+    25% 100%,
+    0% 50%
+  );
+  background: #111;
+  border: 2px solid gold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: #eee;
+}
+
+.dice-crit {
+  animation: critGlow 0.6s;
+  background: #2b1d00;
+  color: gold;
+}
+
+.dice-fail {
+  animation: failGlitch 0.4s;
+  background: #300;
+  color: #ff4444;
+}

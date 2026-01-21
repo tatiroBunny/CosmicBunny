@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>C.O.S.M.I.C HUD</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div id="hud">
+  <div id="avatarHud"><div id="levelHud"></div></div>
+
+  <div id="hudInfo">
+    <div id="name"></div>
+
+    <div id="vidaText"></div>
+    <div class="bar-container" id="vidaBar">
+      <div class="bar vida" id="vidaFill"></div>
+    </div>
+
+    <div id="manaText"></div>
+    <div id="diceContainer"></div>
+  </div>
+</div>
+
+<script src="shared.js"></script>
+
+<script>
+const vidaFill = document.getElementById("vidaFill");
+const vidaBar = document.getElementById("vidaBar");
+const vidaText = document.getElementById("vidaText");
+const manaText = document.getElementById("manaText");
+const diceContainer = document.getElementById("diceContainer");
+
+channel.onmessage = (e) => {
+  const s = e.data;
+
+  document.getElementById("name").innerText = s.name;
+  document.getElementById("levelHud").innerText = s.level;
+
+  vidaText.innerText = `${s.vidaAtual}/${s.vidaMax}`;
+  manaText.innerText = `${s.manaAtual}/${s.manaMax}`;
+
+  vidaBar.style.display = s.showVidaBar ? "block" : "none";
+  vidaFill.style.width = `${(s.vidaAtual / s.vidaMax) * 100}%`;
+
+  diceContainer.innerHTML = "";
+  s.dice.rolls.forEach(v => {
+    const d = document.createElement("div");
+    d.className = "diceHex";
+    d.textContent = v;
+    diceContainer.appendChild(d);
+  });
+};
+</script>
+
+</body>
+</html>

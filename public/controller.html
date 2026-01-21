@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>C.O.S.M.I.C Controller</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="controller-bg">
+
+<div class="controller-actions">
+  <button class="action-btn" onclick="location.href='ficha.html'">📜 Ficha</button>
+  <button class="action-btn" onclick="openHUD()">👁 HUD</button>
+  <button class="action-btn" onclick="location.href='mestre.html'">🎩 Modo Mestre</button>
+</div>
+
+<div class="controller">
+
+  <div class="controller-header">
+    <div class="avatar" style="background-image:url('avatar.png')"></div>
+    <div>
+      <input id="charName" class="char-name">
+      <div class="char-level">
+        Nível <input id="charLevel" type="number">
+      </div>
+    </div>
+  </div>
+
+  <div class="block">
+    <label>Vida</label><br>
+    <input id="vidaAtualInput" type="number">
+    <input id="vidaMaxInput" type="number">
+  </div>
+
+  <div class="block">
+    <label>Mana</label><br>
+    <input id="manaAtualInput" type="number">
+    <input id="manaMaxInput" type="number">
+  </div>
+
+  <button onclick="applyStats()">✔ Aplicar</button>
+
+  <hr>
+
+  <div class="block">
+    <label>Dado</label><br>
+    <select id="diceSides" onchange="validateDiceQty()">
+      <option value="4">d4</option>
+      <option value="6">d6</option>
+      <option value="8">d8</option>
+      <option value="10">d10</option>
+      <option value="12">d12</option>
+      <option value="20" selected>d20</option>
+      <option value="100">d100</option>
+    </select>
+    <input id="diceQty" type="number" min="1" max="3">
+  </div>
+
+  <button onclick="rollDice()">🎲 Rolar</button>
+  <button onclick="toggleBar()">🐰</button>
+
+</div>
+
+<script src="shared.js"></script>
+
+<script>
+/* ====== INICIALIZA CAMPOS ====== */
+charName.value = state.name;
+charLevel.value = state.level;
+
+vidaAtualInput.value = state.vidaAtual;
+vidaMaxInput.value = state.vidaMax;
+manaAtualInput.value = state.manaAtual;
+manaMaxInput.value = state.manaMax;
+
+diceSides.value = state.dice.sides;
+diceQty.value = state.dice.quantity;
+
+/* ====== EVENTOS ====== */
+charName.oninput = () => { state.name = charName.value; send(); };
+charLevel.oninput = () => { state.level = +charLevel.value; send(); };
+
+function applyStats() {
+  state.vidaAtual = +vidaAtualInput.value;
+  state.vidaMax = +vidaMaxInput.value;
+  state.manaAtual = +manaAtualInput.value;
+  state.manaMax = +manaMaxInput.value;
+  send();
+}
+
+function toggleBar() {
+  state.showVidaBar = !state.showVidaBar;
+  send();
+}
+
+function validateDiceQty() {
+  if (+diceSides.value !== 20) {
+    diceQty.value = 1;
+    diceQty.disabled = true;
+  } else {
+    diceQty.disabled = false;
+    diceQty.max = 3;
+  }
+}
+
+function rollDice() {
+  const sides = +diceSides.value;
+  const qty = +diceQty.value;
+
+  state.dice.sides = sides;
+  state.dice.quantity = qty;
+  state.dice.rolls = Array.from(
+    { length: qty },
+    () => 1 + Math.floor(Math.random() * sides)
+  );
+
+  send();
+}
+
+function openHUD() {
+  window.open("hud.html", "HUD", "width=600,height=220");
+}
+
+validateDiceQty();
+</script>
+
+</body>
+</html>
