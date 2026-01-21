@@ -11,8 +11,12 @@ socket.emit("joinHUD", hudId);
 
 document.getElementById("applyBtn").onclick = () => {
   const state = {
+    name: charName.value || "Sem Nome",
+    level: Number(charLevel.value) || 1,
+
     vidaAtual: Number(vidaAtual.value),
     vidaMax: Number(vidaMax.value),
+
     manaAtual: Number(manaAtual.value),
     manaMax: Number(manaMax.value)
   };
