@@ -507,6 +507,49 @@ body[data-theme="arcane"] .vida-fill {
 body[data-theme="arcane"] .vida-damage {
   background: linear-gradient(90deg, #240033, #5f2a8a);
 }
+/* =========================
+   MOBILE FIRST – CONTROLLER
+========================= */
+
+/* largura máxima confortável */
+.box {
+  width: min(92vw, 420px);
+}
+
+/* botões maiores p/ dedo */
+button,
+.action-btn {
+  min-height: 42px;
+  font-size: 15px;
+}
+
+/* inputs maiores */
+input, select {
+  min-height: 38px;
+  font-size: 14px;
+}
+
+/* grid mais amigável */
+.controller-grid {
+  grid-template-columns: 1fr 1fr;
+}
+
+/* celular muito pequeno */
+@media (max-width: 360px) {
+  .controller-grid {
+    grid-template-columns: 1fr;
+  }
+
+  h2 {
+    font-size: 20px;
+  }
+}
+
+/* espaçamento geral melhor */
+.box {
+  gap: 12px;
+}
+
 
 
 
