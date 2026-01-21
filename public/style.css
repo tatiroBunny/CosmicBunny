@@ -446,6 +446,69 @@ button:hover {
   animation: healGlow .5s;
 }
 
+/* =========================
+   BARRA DE VIDA MMO
+========================= */
+
+.vida-bar {
+  position: relative;
+  flex: 1;
+  height: 7px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+/* DANO RETARDADO */
+.vida-damage {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  background: rgba(255,255,255,0.35);
+  transition: width 0.9s cubic-bezier(.22,1,.36,1);
+}
+
+/* VIDA ATUAL */
+.vida-fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  transition: width 0.35s ease;
+}
+
+/* =========================
+   TEMAS
+========================= */
+
+/* DARK (default) */
+body[data-theme="dark"] .vida-fill {
+  background: linear-gradient(90deg, #7a0000, #e01414);
+}
+body[data-theme="dark"] .vida-damage {
+  background: linear-gradient(90deg, #5a0000, #9b2b2b);
+}
+
+/* BLOOD */
+body[data-theme="blood"] .vida-fill {
+  background: linear-gradient(90deg, #5a0000, #ff0000);
+}
+body[data-theme="blood"] .vida-damage {
+  background: linear-gradient(90deg, #3b0000, #8a0000);
+}
+
+/* ARCANE */
+body[data-theme="arcane"] .vida-fill {
+  background: linear-gradient(90deg, #3a005a, #a855ff);
+}
+body[data-theme="arcane"] .vida-damage {
+  background: linear-gradient(90deg, #240033, #5f2a8a);
+}
+
+
 
 
 
