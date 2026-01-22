@@ -3,42 +3,28 @@
 <head>
   <meta charset="UTF-8">
   <title>HUD</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
 </head>
 
-<body class="hud-body">
+<body class="hud-root">
 
-<div class="hud-compact" id="hud">
+  <!-- MOLDURA -->
+  <div class="hud-frame"></div>
 
-  <!-- AVATAR -->
-  <div class="avatar-wrap">
-    <img id="avatarImg" src="" alt="avatar">
-    <div class="level-badge" id="hudLevel">1</div>
+  <!-- CONTEÚDO -->
+  <div class="hud hud-content">
+    <div class="portrait"></div>
+
+    <div class="info">
+      <div id="hudName"></div>
+      <div id="hudLevel"></div>
+      <div id="vida"></div>
+      <div id="mana"></div>
+    </div>
   </div>
 
-  <!-- INFO -->
-  <div class="hud-info">
-    <div class="hud-name" id="hudName">Nome</div>
-
-    <!-- VIDA -->
-<div class="vida-row">
-  <span class="vida-text" id="vidaText">0/0</span>
-
-  <div class="vida-bar">
-    <div class="vida-damage" id="vidaDamage"></div>
-    <div class="vida-fill" id="vidaFill"></div>
-  </div>
-</div>
-
-
-    <!-- MANA -->
-    <div class="mana-text" id="manaText">0/0</div>
-  </div>
-
-</div>
-
-<script src="/socket.io/socket.io.js"></script>
-<script src="hud.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="hud.js"></script>
 </body>
 </html>
-
