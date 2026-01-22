@@ -635,6 +635,84 @@ body.hud-root {
 
 /* vida/mana já usam suas cores */
 
+/* =========================
+   HUD FULL HD + FRAME
+========================= */
+
+body.hud-root {
+  margin: 0;
+  background: transparent !important;
+  width: 1920px;
+  height: 400px;
+  overflow: hidden;
+  position: relative;
+}
+
+/* FRAME */
+.hud-frame {
+  position: absolute;
+  inset: 0;
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* FRAME POR TEMA */
+body[data-theme="blood"] .hud-frame {
+  background-image: url("frame-blood.png");
+}
+
+body[data-theme="arcane"] .hud-frame {
+  background-image: url("frame-arcane.png");
+}
+
+body[data-theme="dark"] .hud-frame {
+  background-image: url("frame-dark.png");
+}
+
+/* CONTEÚDO */
+.hud-content {
+  position: absolute;
+  inset: 90px 120px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  z-index: 5;
+  background: transparent !important;
+}
+
+/* BARRAS */
+.bar {
+  width: 420px;
+  height: 14px;
+  background: rgba(255,255,255,.08);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-top: 6px;
+}
+
+.bar.life div {
+  height: 100%;
+  background: linear-gradient(90deg, darkred, red);
+}
+
+.bar.mana div {
+  height: 100%;
+  background: linear-gradient(90deg, #2b6fff, #4fb8ff);
+}
+
+/* TEXTO */
+#hudName {
+  font-size: 26px;
+}
+
+#hudLevel {
+  font-size: 14px;
+  opacity: .8;
+}
+
 
 
 
