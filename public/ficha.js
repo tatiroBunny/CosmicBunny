@@ -79,7 +79,7 @@ function setFichaData(data) {
 }
 
 /* ===============================
-   CRUD (SERVIDOR)
+   CRUD (LOCAL)
 =============================== */
 
 function novaFicha() {
@@ -93,6 +93,8 @@ function novaFicha() {
     atributos: {},
     skills: Array(10).fill({ checked: false, name: "", attr: "FOR" })
   });
+
+  salvarFicha();
 }
 
 function salvarFicha() {
@@ -102,53 +104,59 @@ function salvarFicha() {
   }
 
   const data = getFichaData();
-
-  socket.emit("saveFicha", {
-    id: currentFichaId,
-    data
-  });
+  localStorage.setItem(currentFichaId, JSON.stringify(data));
+  atualizarSelect();
 }
 
-socket.on("fichaSaved", id => {
-  atualizarSelect();
-  alert("Ficha salva no servidor!");
-});
-
 function excluirFicha() {
-  alert("Exclusão ainda não implementada no servidor.");
+  if (!currentFichaId) return;
+  if (!confirm("Excluir esta ficha?")) return;
+
+  localStorage.removeItem(currentFichaId);
+  currentFichaId = null;
+  location.reload();
 }
 
 /* ===============================
-   SELECT (SERVIDOR)
+   SELECT (LOCAL)
 =============================== */
 
 function atualizarSelect() {
-  socket.emit("listFichas");
-}
-
-socket.on("fichasList", fichas => {
   fichaSelect.innerHTML = `<option value="">— Selecionar Ficha —</option>`;
 
-  fichas.forEach(f => {
-    const opt = document.createElement("option");
-    opt.value = f.id;
-    opt.textContent = f.nome ? `${f.nome} (${f.id})` : f.id;
-    if (f.id === currentFichaId) opt.selected = true;
-    fichaSelect.appendChild(opt);
-  });
-});
+  Object.keys(localStorage)
+    .filter(k => k.startsWith("FICHA_"))
+    .forEach(id => {
+      const data = JSON.parse(localStorage.getItem(id));
+      const opt = document.createElement("option");
+      opt.value = id;
+      opt.textContent = data.nome ? `${data.nome} (${id})` : id;
+      if (id === currentFichaId) opt.selected = true;
+      fichaSelect.appendChild(opt);
+    });
+}
 
 fichaSelect.onchange = () => {
   if (!fichaSelect.value) return;
-  socket.emit("loadFicha", fichaSelect.value);
+  const data = JSON.parse(localStorage.getItem(fichaSelect.value));
+  if (data) setFichaData(data);
 };
 
-socket.on("fichaData", data => {
-  if (!data) {
-    alert("Ficha não encontrada no servidor.");
-    return;
-  }
-  setFichaData(data);
+/* ===============================
+   P2P — ENVIO PARA O MESTRE
+=============================== */
+
+// mestre pediu uma ficha
+socket.on("requestFicha", fichaId => {
+  if (!fichaId) return;
+
+  const data = localStorage.getItem(fichaId);
+  if (!data) return;
+
+  socket.emit("sendFicha", {
+    id: fichaId,
+    data: JSON.parse(data)
+  });
 });
 
 /* ===============================
