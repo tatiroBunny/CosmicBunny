@@ -1,6 +1,8 @@
 {
   "name": "cosmic-bunny",
-  "type": "module",
+  "version": "1.0.0",
+  "description": "COSMIC Bunny RPG Server",
+  "main": "server.js",
   "scripts": {
     "start": "node server.js"
   },
