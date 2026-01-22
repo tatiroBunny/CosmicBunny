@@ -3,31 +3,35 @@
 <head>
   <meta charset="UTF-8">
   <title>HUD</title>
-  <meta name="viewport" content="width=1920, height=400">
+  <meta name="viewport" content="width=600, height=140">
   <link rel="stylesheet" href="style.css">
 </head>
 
 <body class="hud-root">
 
-  <!-- FRAME -->
-  <div class="hud-frame"></div>
+  <div class="hud-cris">
 
-  <!-- HUD CONTENT -->
-  <div class="hud hud-content">
-    <div class="portrait"></div>
-
-    <div class="info">
-      <div id="hudName"></div>
-      <div id="hudLevel"></div>
-
-      <div class="bar life">
-        <div id="vidaBar"></div>
-      </div>
-
-      <div class="bar mana">
-        <div id="manaBar"></div>
-      </div>
+    <!-- AVATAR -->
+    <div class="hud-avatar">
+      <div class="hud-level" id="hudLevel">1</div>
     </div>
+
+    <!-- INFO -->
+    <div class="hud-info">
+      <div class="hud-name" id="hudName">Sem nome</div>
+
+      <!-- VIDA -->
+      <div class="hud-life">
+        <div class="hud-life-bar">
+          <div class="hud-life-fill" id="vidaBar"></div>
+        </div>
+        <span id="vidaText">0/0</span>
+      </div>
+
+      <!-- MANA (APENAS TEXTO) -->
+      <div class="hud-mana-text" id="manaText">0/0</div>
+    </div>
+
   </div>
 
   <script src="/socket.io/socket.io.js"></script>
