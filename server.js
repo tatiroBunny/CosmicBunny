@@ -40,7 +40,7 @@ io.on("connection", socket => {
 
     console.log("📥 Pedido de ficha:", fichaId);
 
-    // envia o pedido para TODOS os outros clientes
+    // envia o pedido para todos EXCETO quem pediu
     socket.broadcast.emit("requestFicha", fichaId);
   });
 
@@ -48,10 +48,14 @@ io.on("connection", socket => {
   socket.on("sendFicha", payload => {
     if (!payload || !payload.id || !payload.data) return;
 
-    console.log("📤 Ficha recebida:", payload.id);
+    console.log("📤 Ficha enviada:", payload.id);
 
-    // envia para TODOS (mestre incluso)
+    // envia a ficha para todos (mestre incluso)
     io.emit("receiveFicha", payload);
+  });
+
+  socket.on("disconnect", () => {
+    console.log("🔴 Desconectado:", socket.id);
   });
 });
 
