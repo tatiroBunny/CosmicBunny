@@ -5,37 +5,6 @@
 const socket = io();
 
 /* ===============================
-   IDENTIDADE DO MESTRE ATUAL
-=============================== */
-
-// cada jogador fica ligado a UM mestre por vez
-let MESTRE_ID = null;
-
-// recebe o mestre quando ele pede algo
-socket.on("requestFicha", payload => {
-  if (!payload || !payload.fichaId || !payload.mestreId) return;
-
-  const { fichaId, mestreId } = payload;
-
-  // trava o mestre dessa aba
-  if (!MESTRE_ID) {
-    MESTRE_ID = mestreId;
-  }
-
-  // ignora pedidos de outros mestres
-  if (mestreId !== MESTRE_ID) return;
-
-  const data = localStorage.getItem(fichaId);
-  if (!data) return;
-
-  socket.emit("sendFicha", {
-    id: fichaId,
-    data: JSON.parse(data),
-    mestreId
-  });
-});
-
-/* ===============================
    ESTADO GLOBAL
 =============================== */
 
@@ -97,12 +66,12 @@ function setFichaData(data) {
   manaMaxInput.value = data.manaMax ?? "";
   dadoVidaInput.value = data.dadoVida ?? "d8";
 
-  const skillEls = document.querySelectorAll(".skill");
-  skillEls.forEach((skill, i) => {
-    if (!data.skills?.[i]) return;
-    skill.querySelector("input[type=checkbox]").checked = data.skills[i].checked;
-    skill.querySelector(".skill-name").value = data.skills[i].name;
-    skill.querySelector(".skill-attr").value = data.skills[i].attr;
+  document.querySelectorAll(".skill").forEach((skill, i) => {
+    const s = data.skills?.[i];
+    if (!s) return;
+    skill.querySelector("input[type=checkbox]").checked = s.checked;
+    skill.querySelector(".skill-name").value = s.name;
+    skill.querySelector(".skill-attr").value = s.attr;
   });
 
   notasInput.value = data.notas || "";
@@ -110,12 +79,11 @@ function setFichaData(data) {
 }
 
 /* ===============================
-   CRUD (LOCAL)
+   CRUD (LOCAL + SERVER)
 =============================== */
 
 function novaFicha() {
   currentFichaId = gerarIdFicha();
-  fichaIdDisplay.value = currentFichaId;
 
   setFichaData({
     id: currentFichaId,
@@ -135,7 +103,16 @@ function salvarFicha() {
   }
 
   const data = getFichaData();
+
+  // salva local
   localStorage.setItem(currentFichaId, JSON.stringify(data));
+
+  // salva no servidor (mestre acessa direto)
+  socket.emit("saveFicha", {
+    id: currentFichaId,
+    data
+  });
+
   atualizarSelect();
 }
 
@@ -174,14 +151,6 @@ fichaSelect.onchange = () => {
 };
 
 /* ===============================
-   BOTÕES
-=============================== */
-
-newFichaBtn.onclick = novaFicha;
-saveFichaBtn.onclick = salvarFicha;
-deleteFichaBtn.onclick = excluirFicha;
-
-/* ===============================
    UTIL
 =============================== */
 
@@ -194,5 +163,8 @@ function copiarFichaId() {
    INIT
 =============================== */
 
-window.onload = atualizarSelect;
+newFichaBtn.onclick = novaFicha;
+saveFichaBtn.onclick = salvarFicha;
+deleteFichaBtn.onclick = excluirFicha;
 
+window.onload = atualizarSelect;
