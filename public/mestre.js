@@ -1,11 +1,11 @@
 // ================================
-// MODO MESTRE – SERVER BASED
+// MODO MESTRE – P2P (SEM SERVER SAVE)
 // ================================
 
 const socket = io();
 
-let fichasAtivas = [];          // ids
-let cacheFichas = {};           // id -> dados da ficha
+let fichasAtivas = [];   // ids
+let cacheFichas = {};   // id -> dados completos
 
 // ---------- Utils ----------
 
@@ -18,9 +18,8 @@ function normalizarId(valor) {
     valor = valor.replace("FICHA_FICHA_", "FICHA_");
   }
 
-  if (valor.startsWith("FICHA_")) return valor;
-
   if (/^\d+$/.test(valor)) return "FICHA_" + valor;
+  if (valor.startsWith("FICHA_")) return valor;
 
   return null;
 }
@@ -29,42 +28,41 @@ function normalizarId(valor) {
 
 function adicionarFicha() {
   const input = document.getElementById("fichaIdInput");
-  const chave = normalizarId(input.value);
+  const id = normalizarId(input.value);
 
-  if (!chave) {
+  if (!id) {
     alert("ID de ficha inválido.");
     return;
   }
 
-  if (fichasAtivas.includes(chave)) {
+  if (fichasAtivas.includes(id)) {
     alert("Essa ficha já está adicionada.");
     return;
   }
 
-  // pede ao servidor
-  socket.emit("loadFicha", chave);
+  // pede aos jogadores
+  socket.emit("requestFicha", id);
 
   input.value = "";
 }
 
-function removerFicha(chave) {
-  fichasAtivas = fichasAtivas.filter(id => id !== chave);
-  delete cacheFichas[chave];
+function removerFicha(id) {
+  fichasAtivas = fichasAtivas.filter(f => f !== id);
+  delete cacheFichas[id];
   salvarEstado();
   renderizar();
 }
 
 // ---------- Socket ----------
 
-socket.on("fichaData", ficha => {
-  if (!ficha || !ficha.id) {
-    alert("Ficha não encontrada no servidor.");
+// recebe ficha de um jogador
+socket.on("receiveFicha", ({ id, data }) => {
+  if (!id || !data) {
+    alert("Ficha inválida recebida.");
     return;
   }
 
-  const id = ficha.id;
-
-  cacheFichas[id] = ficha;
+  cacheFichas[id] = data;
 
   if (!fichasAtivas.includes(id)) {
     fichasAtivas.push(id);
@@ -92,9 +90,7 @@ function renderizar() {
         ficha.nome?.toLowerCase().includes(filtro) ||
         id.toLowerCase().includes(filtro)
       )
-    ) {
-      return;
-    }
+    ) return;
 
     const card = document.createElement("div");
     card.className = "ficha-card";
@@ -125,7 +121,7 @@ function renderizar() {
       <div class="secao">
         <strong>Perícias</strong><br>
         ${
-          ficha.skills && ficha.skills.length
+          ficha.skills?.length
             ? ficha.skills.map(p => p.name).join(" | ")
             : "-"
         }
@@ -146,7 +142,7 @@ function renderizar() {
   });
 }
 
-// ---------- Persistência (APENAS IDs) ----------
+// ---------- Persistência (SÓ IDS) ----------
 
 function salvarEstado() {
   localStorage.setItem(
@@ -161,8 +157,8 @@ function carregarEstado() {
 
   fichasAtivas = JSON.parse(salvo);
 
-  // recarrega todas do servidor
-  fichasAtivas.forEach(id => socket.emit("loadFicha", id));
+  // pede novamente aos jogadores
+  fichasAtivas.forEach(id => socket.emit("requestFicha", id));
 }
 
 // ---------- Navegação ----------
