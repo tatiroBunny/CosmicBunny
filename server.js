@@ -21,19 +21,36 @@ app.use(express.static("public"));
 const FICHAS_FILE = path.join(__dirname, "fichas.json");
 let fichas = {};
 
-// carrega fichas ao iniciar
+// carregar fichas ao iniciar
 if (fs.existsSync(FICHAS_FILE)) {
   try {
     fichas = JSON.parse(fs.readFileSync(FICHAS_FILE, "utf8"));
     console.log("📂 Fichas carregadas:", Object.keys(fichas).length);
   } catch (e) {
     console.error("❌ Erro ao ler fichas.json", e);
+    fichas = {};
   }
 }
 
-// salva fichas no disco
+// salvar fichas
 function salvarFichas() {
   fs.writeFileSync(FICHAS_FILE, JSON.stringify(fichas, null, 2));
+}
+
+// normaliza ID (SEGURANÇA)
+function normalizarId(id) {
+  if (!id) return null;
+  id = String(id).trim();
+
+  while (id.startsWith("FICHA_FICHA_")) {
+    id = id.replace("FICHA_FICHA_", "FICHA_");
+  }
+
+  if (/^\d+$/.test(id)) {
+    id = "FICHA_" + id;
+  }
+
+  return id.startsWith("FICHA_") ? id : null;
 }
 
 /* =========================
@@ -57,23 +74,40 @@ io.on("connection", socket => {
 
   // salvar ficha
   socket.on("saveFicha", ({ id, data }) => {
-    fichas[id] = data;
+    const fichaId = normalizarId(id);
+    if (!fichaId || !data) return;
+
+    // GARANTE consistência
+    data.id = fichaId;
+
+    fichas[fichaId] = data;
     salvarFichas();
-    socket.emit("fichaSaved", id);
+
+    console.log("💾 Ficha salva:", fichaId);
+    socket.emit("fichaSaved", fichaId);
   });
 
   // carregar ficha
   socket.on("loadFicha", id => {
-    socket.emit("fichaData", fichas[id] || null);
+    const fichaId = normalizarId(id);
+    const ficha = fichaId ? fichas[fichaId] : null;
+
+    console.log(
+      ficha
+        ? `📤 Ficha enviada: ${fichaId}`
+        : `⚠️ Ficha não encontrada: ${id}`
+    );
+
+    socket.emit("fichaData", ficha || null);
   });
 
   // listar fichas (modo mestre)
   socket.on("listFichas", () => {
     socket.emit(
       "fichasList",
-      Object.keys(fichas).map(id => ({
-        id,
-        nome: fichas[id]?.nome || "Sem nome"
+      Object.values(fichas).map(f => ({
+        id: f.id,
+        nome: f.nome || "Sem nome"
       }))
     );
   });
