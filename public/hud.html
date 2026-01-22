@@ -3,24 +3,30 @@
 <head>
   <meta charset="UTF-8">
   <title>HUD</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=1920, height=400">
   <link rel="stylesheet" href="style.css">
 </head>
 
 <body class="hud-root">
 
-  <!-- MOLDURA -->
+  <!-- FRAME -->
   <div class="hud-frame"></div>
 
-  <!-- CONTEÚDO -->
+  <!-- HUD CONTENT -->
   <div class="hud hud-content">
     <div class="portrait"></div>
 
     <div class="info">
       <div id="hudName"></div>
       <div id="hudLevel"></div>
-      <div id="vida"></div>
-      <div id="mana"></div>
+
+      <div class="bar life">
+        <div id="vidaBar"></div>
+      </div>
+
+      <div class="bar mana">
+        <div id="manaBar"></div>
+      </div>
     </div>
   </div>
 
