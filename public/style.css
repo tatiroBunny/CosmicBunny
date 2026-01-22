@@ -636,41 +636,105 @@ body.hud-root {
 /* vida/mana já usam suas cores */
 
 /* =========================
-   HUD FULL SIZE (OBS SAFE)
+   HUD – ESTILO CRIS (LIMPO)
 ========================= */
 
 body.hud-root {
   margin: 0;
   background: transparent !important;
-  width: 1920px;
-  height: 500px; /* mais alto pra sua moldura */
+  width: 600px;
+  height: 140px;
   overflow: hidden;
+  font-family: "Cinzel", serif;
+}
+
+/* HUD CONTAINER */
+.hud-cris {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: rgba(20, 18, 18, 0.85);
+  border-radius: 14px;
+  padding: 10px 14px;
+  box-shadow: 0 0 20px rgba(0,0,0,.7);
+}
+
+/* AVATAR */
+.hud-avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background-image: var(--avatar-url);
+  background-size: cover;
+  background-position: center;
+  border: 2px solid #d4af37;
   position: relative;
 }
 
-/* FRAME */
-.hud-frame {
+/* NIVEL */
+.hud-level {
   position: absolute;
-  inset: 0;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: 100% 100%; /* <<< ISSO é o ponto chave */
-  pointer-events: none;
-  z-index: 10;
+  bottom: -6px;
+  right: -6px;
+  width: 24px;
+  height: 24px;
+  background: #050403;
+  border: 1px solid #d4af37;
+  border-radius: 50%;
+  color: #d4af37;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-/* FRAME POR TEMA */
-body[data-theme="blood"] .hud-frame {
-  background-image: url("./frame-blood.png");
+/* INFO */
+.hud-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
-body[data-theme="arcane"] .hud-frame {
-  background-image: url("./frame-arcane.png");
+/* NOME */
+.hud-name {
+  font-size: 18px;
+  color: #e6d6b3;
+  letter-spacing: 1px;
 }
 
-body[data-theme="dark"] .hud-frame {
-  background-image: url("./frame-dark.png");
+/* VIDA */
+.hud-life {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
+
+.hud-life-bar {
+  width: 220px;
+  height: 10px;
+  background: #2a0b0b;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.hud-life-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #400000, crimson);
+  transition: width 0.4s ease;
+}
+
+.hud-life span {
+  font-size: 14px;
+  color: crimson;
+}
+
+/* MANA (SÓ TEXTO) */
+.hud-mana-text {
+  font-size: 14px;
+  color: #4fb8ff;
+}
+
 
 
 
