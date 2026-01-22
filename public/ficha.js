@@ -5,6 +5,37 @@
 const socket = io();
 
 /* ===============================
+   IDENTIDADE DO MESTRE ATUAL
+=============================== */
+
+// cada jogador fica ligado a UM mestre por vez
+let MESTRE_ID = null;
+
+// recebe o mestre quando ele pede algo
+socket.on("requestFicha", payload => {
+  if (!payload || !payload.fichaId || !payload.mestreId) return;
+
+  const { fichaId, mestreId } = payload;
+
+  // trava o mestre dessa aba
+  if (!MESTRE_ID) {
+    MESTRE_ID = mestreId;
+  }
+
+  // ignora pedidos de outros mestres
+  if (mestreId !== MESTRE_ID) return;
+
+  const data = localStorage.getItem(fichaId);
+  if (!data) return;
+
+  socket.emit("sendFicha", {
+    id: fichaId,
+    data: JSON.parse(data),
+    mestreId
+  });
+});
+
+/* ===============================
    ESTADO GLOBAL
 =============================== */
 
@@ -143,23 +174,6 @@ fichaSelect.onchange = () => {
 };
 
 /* ===============================
-   P2P — ENVIO PARA O MESTRE
-=============================== */
-
-// mestre pediu uma ficha
-socket.on("requestFicha", fichaId => {
-  if (!fichaId) return;
-
-  const data = localStorage.getItem(fichaId);
-  if (!data) return;
-
-  socket.emit("sendFicha", {
-    id: fichaId,
-    data: JSON.parse(data)
-  });
-});
-
-/* ===============================
    BOTÕES
 =============================== */
 
@@ -181,3 +195,4 @@ function copiarFichaId() {
 =============================== */
 
 window.onload = atualizarSelect;
+
