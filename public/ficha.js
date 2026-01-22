@@ -1,12 +1,18 @@
 /* ===============================
+   SOCKET
+=============================== */
+
+const socket = io();
+
+/* ===============================
    ESTADO GLOBAL
-   =============================== */
+=============================== */
 
 let currentFichaId = null;
 
 /* ===============================
    HELPERS
-   =============================== */
+=============================== */
 
 function gerarIdFicha() {
   return "FICHA_" + Date.now();
@@ -48,21 +54,21 @@ function setFichaData(data) {
   charName.value = data.nome || "";
   charClass.value = data.classe || "";
 
-  forInput.value = data.atributos?.for || 10;
-  desInput.value = data.atributos?.des || 10;
-  conInput.value = data.atributos?.con || 10;
-  intInput.value = data.atributos?.int || 10;
-  sabInput.value = data.atributos?.sab || 10;
-  carInput.value = data.atributos?.car || 10;
+  forInput.value = data.atributos?.for ?? 10;
+  desInput.value = data.atributos?.des ?? 10;
+  conInput.value = data.atributos?.con ?? 10;
+  intInput.value = data.atributos?.int ?? 10;
+  sabInput.value = data.atributos?.sab ?? 10;
+  carInput.value = data.atributos?.car ?? 10;
 
-  caInput.value = data.ca || 10;
-  vidaMaxInput.value = data.vidaMax || "";
-  manaMaxInput.value = data.manaMax || "";
-  dadoVidaInput.value = data.dadoVida || "d8";
+  caInput.value = data.ca ?? 10;
+  vidaMaxInput.value = data.vidaMax ?? "";
+  manaMaxInput.value = data.manaMax ?? "";
+  dadoVidaInput.value = data.dadoVida ?? "d8";
 
   const skillEls = document.querySelectorAll(".skill");
   skillEls.forEach((skill, i) => {
-    if (!data.skills[i]) return;
+    if (!data.skills?.[i]) return;
     skill.querySelector("input[type=checkbox]").checked = data.skills[i].checked;
     skill.querySelector(".skill-name").value = data.skills[i].name;
     skill.querySelector(".skill-attr").value = data.skills[i].attr;
@@ -73,8 +79,8 @@ function setFichaData(data) {
 }
 
 /* ===============================
-   CRUD
-   =============================== */
+   CRUD (SERVIDOR)
+=============================== */
 
 function novaFicha() {
   currentFichaId = gerarIdFicha();
@@ -87,8 +93,6 @@ function novaFicha() {
     atributos: {},
     skills: Array(10).fill({ checked: false, name: "", attr: "FOR" })
   });
-
-  atualizarSelect();
 }
 
 function salvarFicha() {
@@ -98,47 +102,58 @@ function salvarFicha() {
   }
 
   const data = getFichaData();
-  localStorage.setItem(currentFichaId, JSON.stringify(data));
-  atualizarSelect();
+
+  socket.emit("saveFicha", {
+    id: currentFichaId,
+    data
+  });
 }
 
-function excluirFicha() {
-  if (!currentFichaId) return;
-  if (!confirm("Excluir esta ficha?")) return;
+socket.on("fichaSaved", id => {
+  atualizarSelect();
+  alert("Ficha salva no servidor!");
+});
 
-  localStorage.removeItem(currentFichaId);
-  currentFichaId = null;
-  location.reload();
+function excluirFicha() {
+  alert("Exclusão ainda não implementada no servidor.");
 }
 
 /* ===============================
-   SELECT
-   =============================== */
+   SELECT (SERVIDOR)
+=============================== */
 
 function atualizarSelect() {
+  socket.emit("listFichas");
+}
+
+socket.on("fichasList", fichas => {
   fichaSelect.innerHTML = `<option value="">— Selecionar Ficha —</option>`;
 
-  Object.keys(localStorage)
-    .filter(k => k.startsWith("FICHA_"))
-    .forEach(id => {
-      const data = JSON.parse(localStorage.getItem(id));
-      const opt = document.createElement("option");
-      opt.value = id;
-      opt.textContent = data.nome ? `${data.nome} (${id})` : id;
-      if (id === currentFichaId) opt.selected = true;
-      fichaSelect.appendChild(opt);
-    });
-}
+  fichas.forEach(f => {
+    const opt = document.createElement("option");
+    opt.value = f.id;
+    opt.textContent = f.nome ? `${f.nome} (${f.id})` : f.id;
+    if (f.id === currentFichaId) opt.selected = true;
+    fichaSelect.appendChild(opt);
+  });
+});
 
 fichaSelect.onchange = () => {
   if (!fichaSelect.value) return;
-  const data = JSON.parse(localStorage.getItem(fichaSelect.value));
-  setFichaData(data);
+  socket.emit("loadFicha", fichaSelect.value);
 };
+
+socket.on("fichaData", data => {
+  if (!data) {
+    alert("Ficha não encontrada no servidor.");
+    return;
+  }
+  setFichaData(data);
+});
 
 /* ===============================
    BOTÕES
-   =============================== */
+=============================== */
 
 newFichaBtn.onclick = novaFicha;
 saveFichaBtn.onclick = salvarFicha;
@@ -146,7 +161,7 @@ deleteFichaBtn.onclick = excluirFicha;
 
 /* ===============================
    UTIL
-   =============================== */
+=============================== */
 
 function copiarFichaId() {
   if (!currentFichaId) return;
@@ -155,6 +170,6 @@ function copiarFichaId() {
 
 /* ===============================
    INIT
-   =============================== */
+=============================== */
 
 window.onload = atualizarSelect;
