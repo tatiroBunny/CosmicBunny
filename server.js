@@ -8,60 +8,51 @@ const io = new Server(server);
 
 const PORT = process.env.PORT || 3000;
 
-/* =========================
-   SERVIR ARQUIVOS
-========================= */
 app.use(express.static("public"));
 
-/* =========================
-   SOCKET.IO
-========================= */
 io.on("connection", socket => {
   console.log("🔌 Conectado:", socket.id);
 
   /* =====================
-     HUD (INALTERADO)
+     SALAS DE MESTRE
   ===================== */
-  socket.on("joinHUD", hudId => {
-    socket.join(hudId);
-  });
 
-  socket.on("updateState", ({ hudId, state }) => {
-    io.to(hudId).emit("stateSync", state);
+  socket.on("joinMestre", mestreId => {
+    if (!mestreId) return;
+    socket.join(mestreId);
+    console.log(`🎭 Socket ${socket.id} entrou na sala ${mestreId}`);
   });
 
   /* =====================
-     FICHAS (P2P)
+     PEDIDO DE FICHA
   ===================== */
 
-  // Mestre pede uma ficha por ID
-  socket.on("requestFicha", fichaId => {
-    if (!fichaId) return;
+  socket.on("requestFicha", ({ fichaId, mestreId }) => {
+    if (!fichaId || !mestreId) return;
 
-    console.log("📥 Pedido de ficha:", fichaId);
+    console.log(`📥 Mestre ${mestreId} pediu ficha ${fichaId}`);
 
-    // envia o pedido para todos EXCETO quem pediu
-    socket.broadcast.emit("requestFicha", fichaId);
+    // pede para todos os jogadores
+    socket.broadcast.emit("requestFicha", { fichaId, mestreId });
   });
 
-  // Jogador responde com a ficha
-  socket.on("sendFicha", payload => {
-    if (!payload || !payload.id || !payload.data) return;
+  /* =====================
+     RESPOSTA DO JOGADOR
+  ===================== */
 
-    console.log("📤 Ficha enviada:", payload.id);
+  socket.on("sendFicha", ({ fichaId, data, mestreId }) => {
+    if (!fichaId || !data || !mestreId) return;
 
-    // envia a ficha para todos (mestre incluso)
-    io.emit("receiveFicha", payload);
-  });
+    console.log(`📤 Ficha ${fichaId} enviada para mestre ${mestreId}`);
 
-  socket.on("disconnect", () => {
-    console.log("🔴 Desconectado:", socket.id);
+    // envia SOMENTE para o mestre certo
+    io.to(mestreId).emit("receiveFicha", {
+      id: fichaId,
+      data
+    });
   });
 });
 
-/* =========================
-   START
-========================= */
 server.listen(PORT, () => {
   console.log(`🚀 Servidor rodando na porta ${PORT}`);
 });
