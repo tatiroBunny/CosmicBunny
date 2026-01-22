@@ -570,6 +570,71 @@ body[data-theme="dark"] {
   color: var(--accent);
 }
 
+/* =========================
+   HUD TRANSPARENTE + MOLDURA
+========================= */
+
+/* OBS precisa disso */
+body.hud-root {
+  background: transparent !important;
+  margin: 0;
+  overflow: hidden;
+}
+
+/* container geral */
+.hud-root {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+}
+
+/* MOLDURA */
+.hud-frame {
+  position: absolute;
+  inset: 0;
+  background-image: url("frame.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* CONTEÚDO DO HUD */
+.hud-content {
+  position: absolute;
+  inset: 8%;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  z-index: 5;
+  background: transparent !important;
+}
+
+/* garante transparência total */
+.hud,
+.info,
+#vida,
+#mana,
+#hudName,
+#hudLevel {
+  background: transparent !important;
+}
+
+/* nome */
+#hudName {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+/* nível */
+#hudLevel {
+  font-size: 14px;
+  opacity: 0.8;
+}
+
+/* vida/mana já usam suas cores */
+
 
 
 
