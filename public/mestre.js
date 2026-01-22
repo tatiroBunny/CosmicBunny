@@ -1,10 +1,13 @@
 // ================================
-// MODO MESTRE – SERVER DIRECT (ISOLADO)
+// MODO MESTRE – SERVER DIRECT + CAMPANHAS
 // ================================
 
 const socket = io();
 
-// estado do mestre (APENAS LOCAL)
+// campanha atual
+let campanhaAtual = "PADRAO";
+
+// estado do mestre (LOCAL)
 let fichasAtivas = [];
 let cacheFichas = {};
 
@@ -25,6 +28,36 @@ function normalizarId(valor) {
   return null;
 }
 
+function storageKey() {
+  return `MESTRE_FICHAS_${campanhaAtual}`;
+}
+
+// ---------- Campanha ----------
+
+function criarOuTrocarCampanha() {
+  const input = document.getElementById("campanhaInput");
+  const nome = input.value.trim();
+
+  campanhaAtual = nome || "PADRAO";
+
+  fichasAtivas = [];
+  cacheFichas = {};
+
+  carregarEstado();
+  renderizar();
+
+  alert(`Campanha ativa: ${campanhaAtual}`);
+}
+
+function limparCampanha() {
+  if (!confirm(`Apagar TODAS as fichas da campanha "${campanhaAtual}"?`)) return;
+
+  localStorage.removeItem(storageKey());
+  fichasAtivas = [];
+  cacheFichas = {};
+  renderizar();
+}
+
 // ---------- Core ----------
 
 function adicionarFicha() {
@@ -36,7 +69,6 @@ function adicionarFicha() {
     return;
   }
 
-  // já está ativa
   if (fichasAtivas.includes(id)) {
     alert("Essa ficha já está adicionada.");
     return;
@@ -45,7 +77,6 @@ function adicionarFicha() {
   fichasAtivas.push(id);
   salvarEstado();
 
-  // pede DIRETO ao servidor
   socket.emit("loadFicha", id);
 
   input.value = "";
@@ -60,7 +91,6 @@ function removerFicha(id) {
 
 // ---------- Socket ----------
 
-// recebe ficha do servidor
 socket.on("fichaData", ficha => {
   if (!ficha || !ficha.id) {
     alert("Ficha não encontrada no servidor.");
@@ -147,22 +177,21 @@ function renderizar() {
   });
 }
 
-// ---------- Persistência (SÓ IDS, LOCAL DO NAVEGADOR) ----------
+// ---------- Persistência (POR CAMPANHA) ----------
 
 function salvarEstado() {
   localStorage.setItem(
-    "MESTRE_FICHAS_ATIVAS",
+    storageKey(),
     JSON.stringify(fichasAtivas)
   );
 }
 
 function carregarEstado() {
-  const salvo = localStorage.getItem("MESTRE_FICHAS_ATIVAS");
+  const salvo = localStorage.getItem(storageKey());
   if (!salvo) return;
 
   fichasAtivas = JSON.parse(salvo);
 
-  // recarrega todas do servidor
   fichasAtivas.forEach(id => socket.emit("loadFicha", id));
 }
 
