@@ -1,8 +1,11 @@
 // ================================
-// MODO MESTRE – CORE ESTÁVEL
+// MODO MESTRE – SERVER BASED
 // ================================
 
-let fichasAtivas = [];
+const socket = io();
+
+let fichasAtivas = [];          // ids
+let cacheFichas = {};           // id -> dados da ficha
 
 // ---------- Utils ----------
 
@@ -11,38 +14,22 @@ function normalizarId(valor) {
 
   valor = valor.trim();
 
-  // Remove duplicações tipo FICHA_FICHA_
   while (valor.startsWith("FICHA_FICHA_")) {
     valor = valor.replace("FICHA_FICHA_", "FICHA_");
   }
 
-  // Se já estiver no formato correto
-  if (valor.startsWith("FICHA_")) {
-    return valor;
-  }
+  if (valor.startsWith("FICHA_")) return valor;
 
-  // Se for só número
-  if (/^\d+$/.test(valor)) {
-    return "FICHA_" + valor;
-  }
+  if (/^\d+$/.test(valor)) return "FICHA_" + valor;
 
   return null;
-}
-
-function buscarFicha(chave) {
-  return (
-    localStorage.getItem(chave) ||
-    localStorage.getItem(chave.toLowerCase()) ||
-    null
-  );
 }
 
 // ---------- Core ----------
 
 function adicionarFicha() {
   const input = document.getElementById("fichaIdInput");
-  const valor = input.value;
-  const chave = normalizarId(valor);
+  const chave = normalizarId(input.value);
 
   if (!chave) {
     alert("ID de ficha inválido.");
@@ -54,24 +41,38 @@ function adicionarFicha() {
     return;
   }
 
-  const dados = buscarFicha(chave);
+  // pede ao servidor
+  socket.emit("loadFicha", chave);
 
-  if (!dados) {
-    alert("Ficha não encontrada.");
-    return;
-  }
-
-  fichasAtivas.push(chave);
-  salvarEstado();
-  renderizar();
   input.value = "";
 }
 
 function removerFicha(chave) {
   fichasAtivas = fichasAtivas.filter(id => id !== chave);
+  delete cacheFichas[chave];
   salvarEstado();
   renderizar();
 }
+
+// ---------- Socket ----------
+
+socket.on("fichaData", ficha => {
+  if (!ficha || !ficha.id) {
+    alert("Ficha não encontrada no servidor.");
+    return;
+  }
+
+  const id = ficha.id;
+
+  cacheFichas[id] = ficha;
+
+  if (!fichasAtivas.includes(id)) {
+    fichasAtivas.push(id);
+  }
+
+  salvarEstado();
+  renderizar();
+});
 
 // ---------- Render ----------
 
@@ -81,17 +82,15 @@ function renderizar() {
 
   container.innerHTML = "";
 
-  fichasAtivas.forEach(chave => {
-    const dadosBrutos = buscarFicha(chave);
-    if (!dadosBrutos) return;
-
-    const ficha = JSON.parse(dadosBrutos);
+  fichasAtivas.forEach(id => {
+    const ficha = cacheFichas[id];
+    if (!ficha) return;
 
     if (
       filtro &&
       !(
         ficha.nome?.toLowerCase().includes(filtro) ||
-        chave.toLowerCase().includes(filtro)
+        id.toLowerCase().includes(filtro)
       )
     ) {
       return;
@@ -101,9 +100,9 @@ function renderizar() {
     card.className = "ficha-card";
 
     card.innerHTML = `
-      <button class="fechar" onclick="removerFicha('${chave}')">×</button>
+      <button class="fechar" onclick="removerFicha('${id}')">×</button>
 
-      <h2>${ficha.nome || "Sem Nome"} <span>(${chave})</span></h2>
+      <h2>${ficha.nome || "Sem Nome"} <span>(${id})</span></h2>
       <p>${ficha.classe || "-"}</p>
 
       <p>
@@ -126,15 +125,15 @@ function renderizar() {
       <div class="secao">
         <strong>Perícias</strong><br>
         ${
-          ficha.pericias && ficha.pericias.length
-            ? ficha.pericias.map(p => p.nome).join(" | ")
+          ficha.skills && ficha.skills.length
+            ? ficha.skills.map(p => p.name).join(" | ")
             : "-"
         }
       </div>
 
       <div class="secao">
         <strong>Anotações</strong><br>
-        ${ficha.anotacoes || "-"}
+        ${ficha.notas || "-"}
       </div>
 
       <div class="secao">
@@ -147,17 +146,23 @@ function renderizar() {
   });
 }
 
-// ---------- Persistência ----------
+// ---------- Persistência (APENAS IDs) ----------
 
 function salvarEstado() {
-  localStorage.setItem("MESTRE_FICHAS_ATIVAS", JSON.stringify(fichasAtivas));
+  localStorage.setItem(
+    "MESTRE_FICHAS_ATIVAS",
+    JSON.stringify(fichasAtivas)
+  );
 }
 
 function carregarEstado() {
   const salvo = localStorage.getItem("MESTRE_FICHAS_ATIVAS");
-  if (salvo) {
-    fichasAtivas = JSON.parse(salvo);
-  }
+  if (!salvo) return;
+
+  fichasAtivas = JSON.parse(salvo);
+
+  // recarrega todas do servidor
+  fichasAtivas.forEach(id => socket.emit("loadFicha", id));
 }
 
 // ---------- Navegação ----------
@@ -170,5 +175,4 @@ function voltar() {
 
 window.onload = () => {
   carregarEstado();
-  renderizar();
 };
