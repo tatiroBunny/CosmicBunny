@@ -1,48 +1,33 @@
 const socket = io();
-const hudId = new URLSearchParams(window.location.search).get("id");
+const hudId = new URLSearchParams(location.search).get("id");
 
-let lastHP = null;
-let damageTimeout = null;
+if (!hudId) {
+  document.body.innerHTML = "HUD sem ID";
+  throw new Error("HUD ID ausente");
+}
 
 socket.emit("joinHUD", hudId);
 
 socket.on("stateSync", state => {
 
-  /* ===== IDENTIDADE ===== */
-  hudName.textContent = state.name ?? "Sem Nome";
-  hudLevel.textContent = Number.isFinite(state.level) ? state.level : 1;
+  hudName.textContent = state.name || "Sem nome";
+  hudLevel.textContent = state.level ? `Nv ${state.level}` : "";
 
-  if (state.avatar) avatarImg.src = state.avatar;
+  /* BARRAS */
+  const vidaPct = state.vidaMax ? (state.vidaAtual / state.vidaMax) * 100 : 0;
+  const manaPct = state.manaMax ? (state.manaAtual / state.manaMax) * 100 : 0;
 
-  /* ===== TEMA ===== */
-  document.body.dataset.theme = state.theme || "dark";
+  vidaBar.style.width = `${vidaPct}%`;
+  manaBar.style.width = `${manaPct}%`;
 
-  /* ===== VIDA ===== */
-  const vidaAtual = Number(state.vidaAtual) || 0;
-  const vidaMax = Number(state.vidaMax) || 1;
-
-  vidaText.textContent = `${vidaAtual}/${vidaMax}`;
-
-  const percent = Math.max(0, Math.min(100, (vidaAtual / vidaMax) * 100));
-
-  /* Barra principal (rápida) */
-  vidaFill.style.width = `${percent}%`;
-
-  /* Barra de dano retardado */
-  if (lastHP !== null && vidaAtual < lastHP) {
-    clearTimeout(damageTimeout);
-
-    damageTimeout = setTimeout(() => {
-      vidaDamage.style.width = `${percent}%`;
-    }, 350);
-  } else {
-    vidaDamage.style.width = `${percent}%`;
+  /* AVATAR */
+  if (state.avatar) {
+    document.documentElement.style.setProperty(
+      "--avatar-url",
+      `url(${state.avatar})`
+    );
   }
 
-  lastHP = vidaAtual;
-
-  /* ===== MANA ===== */
-  const manaAtual = Number(state.manaAtual) || 0;
-  const manaMax = Number(state.manaMax) || 0;
-  manaText.textContent = `${manaAtual}/${manaMax}`;
+  /* FRAME POR TEMA */
+  document.body.dataset.theme = state.theme || "blood";
 });
