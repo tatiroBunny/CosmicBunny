@@ -8,20 +8,47 @@
 <body>
 
 <header class="master-bar">
+
+  <!-- ID DA FICHA -->
   <input id="fichaIdInput" placeholder="ID da ficha">
   <button onclick="adicionarFicha()">Adicionar</button>
 
-  <input id="filtroInput" placeholder="Filtrar por nome" oninput="renderizar()">
+  <!-- FILTRO -->
+  <input
+    id="filtroInput"
+    placeholder="Filtrar por nome"
+    oninput="renderizar()"
+  >
+
+  <!-- CAMPANHA -->
+  <input
+    id="campanhaInput"
+    placeholder="Campanha"
+    style="margin-left: 8px; width: 160px;"
+  >
+
+  <button onclick="criarOuTrocarCampanha()">
+    Usar Campanha
+  </button>
+
+  <!-- LIMPAR TUDO -->
+  <button
+    onclick="limparCampanha()"
+    style="color: crimson;"
+  >
+    Limpar Tudo
+  </button>
+
+  <!-- VOLTAR -->
   <button onclick="voltar()">Voltar</button>
+
 </header>
 
 <main id="cardsContainer"></main>
 
-<!-- 🔥 SOCKET.IO (OBRIGATÓRIO) -->
+<!-- SOCKET.IO -->
 <script src="/socket.io/socket.io.js"></script>
 <script src="mestre.js"></script>
 
 </body>
 </html>
-
-
