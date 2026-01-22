@@ -1,39 +1,19 @@
 // ================================
-// MODO MESTRE – P2P ISOLADO POR SALA
+// MODO MESTRE – P2P ISOLADO
 // ================================
 
 const socket = io();
 
-/* ================================
-   IDENTIDADE DO MESTRE (LOCAL)
-================================ */
-
-// um mestre = um universo
-const MESTRE_ID =
-  localStorage.getItem("MESTRE_ID") ||
-  (() => {
-    const id = "MESTRE_" + crypto.randomUUID();
-    localStorage.setItem("MESTRE_ID", id);
-    return id;
-  })();
-
-// entra na sala exclusiva do mestre
-socket.emit("joinMestre", MESTRE_ID);
-
-/* ================================
-   ESTADO
-================================ */
+// ID único desse mestre (por aba)
+const MESTRE_ID = crypto.randomUUID();
 
 let fichasAtivas = [];   // ids
 let cacheFichas = {};   // id -> dados completos
 
-/* ================================
-   UTILS
-================================ */
+// ---------- Utils ----------
 
 function normalizarId(valor) {
   if (!valor) return null;
-
   valor = valor.trim();
 
   while (valor.startsWith("FICHA_FICHA_")) {
@@ -46,9 +26,7 @@ function normalizarId(valor) {
   return null;
 }
 
-/* ================================
-   CORE
-================================ */
+// ---------- Core ----------
 
 function adicionarFicha() {
   const input = document.getElementById("fichaIdInput");
@@ -64,7 +42,9 @@ function adicionarFicha() {
     return;
   }
 
-  // pede APENAS para jogadores, ligado a ESTE mestre
+  fichasAtivas.push(id);
+  salvarEstado();
+
   socket.emit("requestFicha", {
     fichaId: id,
     mestreId: MESTRE_ID
@@ -80,29 +60,19 @@ function removerFicha(id) {
   renderizar();
 }
 
-/* ================================
-   SOCKET
-================================ */
+// ---------- Socket ----------
 
-// recebe ficha SOMENTE deste mestre
 socket.on("receiveFicha", payload => {
-  if (!payload || !payload.id || !payload.data) return;
+  if (!payload || payload.mestreId !== MESTRE_ID) return;
 
   const { id, data } = payload;
+  if (!id || !data) return;
 
   cacheFichas[id] = data;
-
-  if (!fichasAtivas.includes(id)) {
-    fichasAtivas.push(id);
-  }
-
-  salvarEstado();
   renderizar();
 });
 
-/* ================================
-   RENDER
-================================ */
+// ---------- Render ----------
 
 function renderizar() {
   const container = document.getElementById("cardsContainer");
@@ -127,54 +97,15 @@ function renderizar() {
 
     card.innerHTML = `
       <button class="fechar" onclick="removerFicha('${id}')">×</button>
-
       <h2>${ficha.nome || "Sem Nome"} <span>(${id})</span></h2>
       <p>${ficha.classe || "-"}</p>
-
-      <p>
-        <strong>Vida Máx:</strong> ${ficha.vidaMax ?? "-"} |
-        <strong>Mana Máx:</strong> ${ficha.manaMax ?? "-"} |
-        <strong>CA:</strong> ${ficha.ca ?? "-"} |
-        <strong>Dado:</strong> ${ficha.dadoVida ?? "-"}
-      </p>
-
-      <div class="secao">
-        <strong>Atributos</strong><br>
-        FOR: ${ficha.atributos?.for ?? "-"} |
-        DES: ${ficha.atributos?.des ?? "-"} |
-        CON: ${ficha.atributos?.con ?? "-"} |
-        INT: ${ficha.atributos?.int ?? "-"} |
-        SAB: ${ficha.atributos?.sab ?? "-"} |
-        CAR: ${ficha.atributos?.car ?? "-"}
-      </div>
-
-      <div class="secao">
-        <strong>Perícias</strong><br>
-        ${
-          ficha.skills?.length
-            ? ficha.skills.map(p => p.name).join(" | ")
-            : "-"
-        }
-      </div>
-
-      <div class="secao">
-        <strong>Anotações</strong><br>
-        ${ficha.notas || "-"}
-      </div>
-
-      <div class="secao">
-        <strong>Inventário</strong><br>
-        ${ficha.inventario || "-"}
-      </div>
     `;
 
     container.appendChild(card);
   });
 }
 
-/* ================================
-   PERSISTÊNCIA (SÓ IDS, LOCAL)
-================================ */
+// ---------- Persistência ----------
 
 function salvarEstado() {
   localStorage.setItem(
@@ -189,26 +120,16 @@ function carregarEstado() {
 
   fichasAtivas = JSON.parse(salvo);
 
-  // pede novamente as fichas AO VIVO
-  fichasAtivas.forEach(id =>
+  // pede novamente TODAS
+  fichasAtivas.forEach(id => {
     socket.emit("requestFicha", {
       fichaId: id,
       mestreId: MESTRE_ID
-    })
-  );
+    });
+  });
 }
 
-/* ================================
-   NAVEGAÇÃO
-================================ */
-
-function voltar() {
-  window.location.href = "controller.html";
-}
-
-/* ================================
-   INIT
-================================ */
+// ---------- Init ----------
 
 window.onload = () => {
   carregarEstado();
