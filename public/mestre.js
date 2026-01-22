@@ -1,16 +1,11 @@
 // ================================
-// MODO MESTRE – P2P ISOLADO E ESTÁVEL
+// MODO MESTRE – SERVER DIRECT (ISOLADO)
 // ================================
 
 const socket = io();
 
-// ID ÚNICO DO MESTRE (ISOLA ESTADO ENTRE MESTRES)
-const MESTRE_ID = "MESTRE_" + crypto.randomUUID();
-
-// ids ativos
+// estado do mestre (APENAS LOCAL)
 let fichasAtivas = [];
-
-// cache local das fichas
 let cacheFichas = {};
 
 // ---------- Utils ----------
@@ -41,31 +36,17 @@ function adicionarFicha() {
     return;
   }
 
-  // já existe no estado
+  // já está ativa
   if (fichasAtivas.includes(id)) {
-
-    // mas não está no cache → REPEDIR
-    if (!cacheFichas[id]) {
-      socket.emit("requestFicha", {
-        fichaId: id,
-        mestreId: MESTRE_ID
-      });
-      alert("Ficha estava no estado. Requisitando novamente...");
-      return;
-    }
-
     alert("Essa ficha já está adicionada.");
     return;
   }
 
-  // nova ficha
   fichasAtivas.push(id);
   salvarEstado();
 
-  socket.emit("requestFicha", {
-    fichaId: id,
-    mestreId: MESTRE_ID
-  });
+  // pede DIRETO ao servidor
+  socket.emit("loadFicha", id);
 
   input.value = "";
 }
@@ -79,19 +60,17 @@ function removerFicha(id) {
 
 // ---------- Socket ----------
 
-// recebe ficha do jogador
-socket.on("receiveFicha", payload => {
-  if (!payload || !payload.id || !payload.data) return;
+// recebe ficha do servidor
+socket.on("fichaData", ficha => {
+  if (!ficha || !ficha.id) {
+    alert("Ficha não encontrada no servidor.");
+    return;
+  }
 
-  const { id, data, mestreId } = payload;
+  cacheFichas[ficha.id] = ficha;
 
-  // IGNORA fichas de outros mestres
-  if (mestreId !== MESTRE_ID) return;
-
-  cacheFichas[id] = data;
-
-  if (!fichasAtivas.includes(id)) {
-    fichasAtivas.push(id);
+  if (!fichasAtivas.includes(ficha.id)) {
+    fichasAtivas.push(ficha.id);
   }
 
   salvarEstado();
@@ -168,31 +147,23 @@ function renderizar() {
   });
 }
 
-// ---------- Persistência (SÓ IDS, POR MESTRE) ----------
+// ---------- Persistência (SÓ IDS, LOCAL DO NAVEGADOR) ----------
 
 function salvarEstado() {
   localStorage.setItem(
-    `MESTRE_FICHAS_ATIVAS_${MESTRE_ID}`,
+    "MESTRE_FICHAS_ATIVAS",
     JSON.stringify(fichasAtivas)
   );
 }
 
 function carregarEstado() {
-  const salvo = localStorage.getItem(
-    `MESTRE_FICHAS_ATIVAS_${MESTRE_ID}`
-  );
-
+  const salvo = localStorage.getItem("MESTRE_FICHAS_ATIVAS");
   if (!salvo) return;
 
   fichasAtivas = JSON.parse(salvo);
 
-  // repede todas ao recarregar
-  fichasAtivas.forEach(id => {
-    socket.emit("requestFicha", {
-      fichaId: id,
-      mestreId: MESTRE_ID
-    });
-  });
+  // recarrega todas do servidor
+  fichasAtivas.forEach(id => socket.emit("loadFicha", id));
 }
 
 // ---------- Navegação ----------
