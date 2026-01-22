@@ -10,24 +10,28 @@ socket.emit("joinHUD", hudId);
 
 socket.on("stateSync", state => {
 
+  // Nome e nível
   hudName.textContent = state.name || "Sem nome";
-  hudLevel.textContent = state.level ? `Nv ${state.level}` : "";
+  hudLevel.textContent = state.level || "1";
 
-  /* BARRAS */
-  const vidaPct = state.vidaMax ? (state.vidaAtual / state.vidaMax) * 100 : 0;
-  const manaPct = state.manaMax ? (state.manaAtual / state.manaMax) * 100 : 0;
+  // VIDA
+  const vidaAtual = state.vidaAtual ?? 0;
+  const vidaMax = state.vidaMax ?? 0;
+  const vidaPerc = vidaMax ? (vidaAtual / vidaMax) * 100 : 0;
 
-  vidaBar.style.width = `${vidaPct}%`;
-  manaBar.style.width = `${manaPct}%`;
+  vidaBar.style.width = `${vidaPerc}%`;
+  vidaText.textContent = `${vidaAtual}/${vidaMax}`;
 
-  /* AVATAR */
+  // MANA (SÓ TEXTO)
+  const manaAtual = state.manaAtual ?? 0;
+  const manaMax = state.manaMax ?? 0;
+  manaText.textContent = `${manaAtual}/${manaMax}`;
+
+  // Avatar
   if (state.avatar) {
     document.documentElement.style.setProperty(
       "--avatar-url",
       `url(${state.avatar})`
     );
   }
-
-  /* FRAME POR TEMA */
-  document.body.dataset.theme = state.theme || "blood";
 });
