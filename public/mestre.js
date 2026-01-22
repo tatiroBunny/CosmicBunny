@@ -1,13 +1,35 @@
 // ================================
-// MODO MESTRE – P2P (SEM SERVER SAVE)
+// MODO MESTRE – P2P ISOLADO POR SALA
 // ================================
 
 const socket = io();
 
+/* ================================
+   IDENTIDADE DO MESTRE (LOCAL)
+================================ */
+
+// um mestre = um universo
+const MESTRE_ID =
+  localStorage.getItem("MESTRE_ID") ||
+  (() => {
+    const id = "MESTRE_" + crypto.randomUUID();
+    localStorage.setItem("MESTRE_ID", id);
+    return id;
+  })();
+
+// entra na sala exclusiva do mestre
+socket.emit("joinMestre", MESTRE_ID);
+
+/* ================================
+   ESTADO
+================================ */
+
 let fichasAtivas = [];   // ids
 let cacheFichas = {};   // id -> dados completos
 
-// ---------- Utils ----------
+/* ================================
+   UTILS
+================================ */
 
 function normalizarId(valor) {
   if (!valor) return null;
@@ -24,7 +46,9 @@ function normalizarId(valor) {
   return null;
 }
 
-// ---------- Core ----------
+/* ================================
+   CORE
+================================ */
 
 function adicionarFicha() {
   const input = document.getElementById("fichaIdInput");
@@ -40,8 +64,11 @@ function adicionarFicha() {
     return;
   }
 
-  // pede aos jogadores
-  socket.emit("requestFicha", id);
+  // pede APENAS para jogadores, ligado a ESTE mestre
+  socket.emit("requestFicha", {
+    fichaId: id,
+    mestreId: MESTRE_ID
+  });
 
   input.value = "";
 }
@@ -53,14 +80,15 @@ function removerFicha(id) {
   renderizar();
 }
 
-// ---------- Socket ----------
+/* ================================
+   SOCKET
+================================ */
 
-// recebe ficha de um jogador
-socket.on("receiveFicha", ({ id, data }) => {
-  if (!id || !data) {
-    alert("Ficha inválida recebida.");
-    return;
-  }
+// recebe ficha SOMENTE deste mestre
+socket.on("receiveFicha", payload => {
+  if (!payload || !payload.id || !payload.data) return;
+
+  const { id, data } = payload;
 
   cacheFichas[id] = data;
 
@@ -72,7 +100,9 @@ socket.on("receiveFicha", ({ id, data }) => {
   renderizar();
 });
 
-// ---------- Render ----------
+/* ================================
+   RENDER
+================================ */
 
 function renderizar() {
   const container = document.getElementById("cardsContainer");
@@ -142,7 +172,9 @@ function renderizar() {
   });
 }
 
-// ---------- Persistência (SÓ IDS) ----------
+/* ================================
+   PERSISTÊNCIA (SÓ IDS, LOCAL)
+================================ */
 
 function salvarEstado() {
   localStorage.setItem(
@@ -157,17 +189,26 @@ function carregarEstado() {
 
   fichasAtivas = JSON.parse(salvo);
 
-  // pede novamente aos jogadores
-  fichasAtivas.forEach(id => socket.emit("requestFicha", id));
+  // pede novamente as fichas AO VIVO
+  fichasAtivas.forEach(id =>
+    socket.emit("requestFicha", {
+      fichaId: id,
+      mestreId: MESTRE_ID
+    })
+  );
 }
 
-// ---------- Navegação ----------
+/* ================================
+   NAVEGAÇÃO
+================================ */
 
 function voltar() {
   window.location.href = "controller.html";
 }
 
-// ---------- Init ----------
+/* ================================
+   INIT
+================================ */
 
 window.onload = () => {
   carregarEstado();
