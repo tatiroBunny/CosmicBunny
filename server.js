@@ -1,6 +1,8 @@
 const express = require("express");
 const http = require("http");
 const { Server } = require("socket.io");
+const fs = require("fs");
+const path = require("path");
 
 const app = express();
 const server = http.createServer(app);
@@ -14,33 +16,89 @@ const PORT = process.env.PORT || 3000;
 app.use(express.static("public"));
 
 /* =========================
-   FICHAS NO SERVIDOR
+   FICHAS (SERVER = FONTE)
 ========================= */
-const fichas = {}; // memória (Render free não persiste disco)
+
+const FICHAS_FILE = path.join(__dirname, "fichas.json");
+let fichas = {};
+
+// carrega ao iniciar
+if (fs.existsSync(FICHAS_FILE)) {
+  try {
+    fichas = JSON.parse(fs.readFileSync(FICHAS_FILE, "utf8"));
+    console.log("📂 Fichas carregadas:", Object.keys(fichas).length);
+  } catch {
+    fichas = {};
+  }
+}
+
+// salva no disco
+function salvarFichas() {
+  fs.writeFileSync(FICHAS_FILE, JSON.stringify(fichas, null, 2));
+}
+
+// normaliza ID
+function normalizarId(id) {
+  if (!id) return null;
+  id = String(id).trim();
+
+  while (id.startsWith("FICHA_FICHA_")) {
+    id = id.replace("FICHA_FICHA_", "FICHA_");
+  }
+
+  if (/^\d+$/.test(id)) id = "FICHA_" + id;
+  return id.startsWith("FICHA_") ? id : null;
+}
 
 /* =========================
-   SOCKET
+   SOCKET.IO
 ========================= */
 io.on("connection", socket => {
   console.log("🔌 Conectado:", socket.id);
 
-  // salvar ficha (jogador)
+  /* =====================
+     HUD (FUNCIONAL)
+  ===================== */
+
+  socket.on("joinHUD", hudId => {
+    socket.join(hudId);
+    console.log("🎯 HUD join:", hudId);
+  });
+
+  socket.on("updateState", ({ hudId, state }) => {
+    if (!hudId) return;
+    io.to(hudId).emit("stateSync", state);
+  });
+
+  /* =====================
+     FICHAS (SERVER DIRECT)
+  ===================== */
+
   socket.on("saveFicha", ({ id, data }) => {
-    if (!id || !data) return;
+    const fichaId = normalizarId(id);
+    if (!fichaId || !data) return;
 
-    fichas[id] = data;
-    console.log("💾 Ficha salva:", id);
+    data.id = fichaId;
+    fichas[fichaId] = data;
+    salvarFichas();
 
-    socket.emit("fichaSaved", id);
+    socket.emit("fichaSaved", fichaId);
+    console.log("💾 Ficha salva:", fichaId);
   });
 
-  // carregar ficha (mestre ou jogador)
   socket.on("loadFicha", id => {
-    const ficha = fichas[id] || null;
-    socket.emit("fichaData", ficha);
+    const fichaId = normalizarId(id);
+    const ficha = fichaId ? fichas[fichaId] : null;
+
+    socket.emit("fichaData", ficha || null);
+
+    console.log(
+      ficha
+        ? `📤 Ficha enviada: ${fichaId}`
+        : `⚠️ Ficha não encontrada: ${id}`
+    );
   });
 
-  // listar fichas (select do jogador)
   socket.on("listFichas", () => {
     socket.emit(
       "fichasList",
