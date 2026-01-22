@@ -1,15 +1,15 @@
 // ================================
-// MODO MESTRE – SERVER DIRECT + CAMPANHAS
+// MODO MESTRE – SERVER DIRECT (ISOLADO)
 // ================================
 
 const socket = io();
 
-// campanha atual
-let campanhaAtual = "PADRAO";
-
 // estado do mestre (LOCAL)
 let fichasAtivas = [];
 let cacheFichas = {};
+
+// chave fixa do modo mestre
+const STORAGE_KEY = "MESTRE_FICHAS_ATIVAS";
 
 // ---------- Utils ----------
 
@@ -26,36 +26,6 @@ function normalizarId(valor) {
   if (valor.startsWith("FICHA_")) return valor;
 
   return null;
-}
-
-function storageKey() {
-  return `MESTRE_FICHAS_${campanhaAtual}`;
-}
-
-// ---------- Campanha ----------
-
-function criarOuTrocarCampanha() {
-  const input = document.getElementById("campanhaInput");
-  const nome = input.value.trim();
-
-  campanhaAtual = nome || "PADRAO";
-
-  fichasAtivas = [];
-  cacheFichas = {};
-
-  carregarEstado();
-  renderizar();
-
-  alert(`Campanha ativa: ${campanhaAtual}`);
-}
-
-function limparCampanha() {
-  if (!confirm(`Apagar TODAS as fichas da campanha "${campanhaAtual}"?`)) return;
-
-  localStorage.removeItem(storageKey());
-  fichasAtivas = [];
-  cacheFichas = {};
-  renderizar();
 }
 
 // ---------- Core ----------
@@ -78,7 +48,6 @@ function adicionarFicha() {
   salvarEstado();
 
   socket.emit("loadFicha", id);
-
   input.value = "";
 }
 
@@ -89,11 +58,34 @@ function removerFicha(id) {
   renderizar();
 }
 
+// ---------- 🔥 RESET FORÇADO ----------
+
+function limparCampanha() {
+  if (!confirm("Isso vai APAGAR TODAS as fichas do modo mestre. Continuar?")) {
+    return;
+  }
+
+  // limpa storage
+  localStorage.removeItem(STORAGE_KEY);
+
+  // limpa memória
+  fichasAtivas.length = 0;
+  cacheFichas = {};
+
+  // limpa UI
+  document.getElementById("cardsContainer").innerHTML = "";
+
+  alert("Modo mestre resetado com sucesso.");
+}
+
 // ---------- Socket ----------
 
 socket.on("fichaData", ficha => {
+  // 🔒 se não há estado ativo, ignora qualquer resposta
+  if (!fichasAtivas.length) return;
+
   if (!ficha || !ficha.id) {
-    alert("Ficha não encontrada no servidor.");
+    console.warn("Ficha ignorada (não existe no servidor).");
     return;
   }
 
@@ -177,17 +169,14 @@ function renderizar() {
   });
 }
 
-// ---------- Persistência (POR CAMPANHA) ----------
+// ---------- Persistência ----------
 
 function salvarEstado() {
-  localStorage.setItem(
-    storageKey(),
-    JSON.stringify(fichasAtivas)
-  );
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(fichasAtivas));
 }
 
 function carregarEstado() {
-  const salvo = localStorage.getItem(storageKey());
+  const salvo = localStorage.getItem(STORAGE_KEY);
   if (!salvo) return;
 
   fichasAtivas = JSON.parse(salvo);
@@ -203,6 +192,4 @@ function voltar() {
 
 // ---------- Init ----------
 
-window.onload = () => {
-  carregarEstado();
-};
+window.onload = carregarEstado;
