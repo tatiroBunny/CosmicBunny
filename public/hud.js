@@ -19,15 +19,18 @@ let ultimaVida = null;
 function atualizarVida(atual, max) {
   if (!max || max <= 0) {
     vidaText.textContent = "0 / 0";
-    vidaLeft.style.transform = "scaleX(0)";
-    vidaRight.style.transform = "scaleX(0)";
+    vidaLeft.style.width = "0%";
+    vidaRight.style.width = "0%";
     return;
   }
 
   const pct = Math.max(0, Math.min(1, atual / max));
 
-  vidaLeft.style.transform = `scaleX(${pct})`;
-  vidaRight.style.transform = `scaleX(${pct})`;
+  // cada lado ocupa METADE da porcentagem
+  const halfPct = pct * 50;
+
+  vidaLeft.style.width = `${halfPct}%`;
+  vidaRight.style.width = `${halfPct}%`;
 
   vidaText.textContent = `${atual} / ${max}`;
 }
@@ -40,7 +43,7 @@ socket.on("stateSync", state => {
 
   manaText.textContent = `Mana: ${state.manaAtual ?? 0} / ${state.manaMax ?? 0}`;
 
-  // ÍCONE
+  // ícone
   if (state.icon) {
     document.documentElement.style.setProperty(
       "--avatar-url",
@@ -48,7 +51,7 @@ socket.on("stateSync", state => {
     );
   }
 
-  // DANO / CURA
+  // dano / cura
   if (ultimaVida !== null) {
     if (state.vidaAtual < ultimaVida) {
       hud.classList.add("hud-damage");
@@ -58,7 +61,7 @@ socket.on("stateSync", state => {
 
     setTimeout(() => {
       hud.classList.remove("hud-damage", "hud-heal");
-    }, 300);
+    }, 250);
   }
 
   ultimaVida = state.vidaAtual;
