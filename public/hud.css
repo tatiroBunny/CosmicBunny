@@ -1,113 +1,132 @@
-/* ===== RESET ===== */
-* {
-  box-sizing: border-box;
+/* RESET */
+html, body {
   margin: 0;
   padding: 0;
-}
-
-body {
   background: transparent;
+  width: 100%;
+  height: 100%;
   overflow: hidden;
   font-family: "Cinzel", serif;
 }
 
-/* ===== HUD ===== */
+/* HUD BASE */
 #hud {
-  display: flex;
-  align-items: center;
-  gap: 18px;
-
-  padding: 20px;
-  transform: scale(1.1); /* compacto */
-  transform-origin: top left;
-
-  transition: filter 0.25s ease;
-}
-
-/* ===== FEEDBACK ===== */
-#hud.hud-damage {
-  filter: drop-shadow(0 0 14px rgba(255, 0, 0, 0.9));
-}
-
-#hud.hud-heal {
-  filter: drop-shadow(0 0 14px rgba(0, 255, 140, 0.9));
-}
-
-/* ===== AVATAR ===== */
-.avatar {
-  width: 72px;
-  height: 72px;
-  border-radius: 50%;
-  border: 3px solid gold;
-  background-image: var(--avatar-url);
-  background-size: cover;
-  background-position: center;
-}
-
-/* ===== INFO ===== */
-.info {
-  width: 360px;
-}
-
-/* ===== NOME ===== */
-.name-line {
-  display: flex;
-  gap: 8px;
-  align-items: baseline;
-  color: gold;
-  font-size: 20px;
-  margin-bottom: 6px;
-}
-
-#hudLevel {
-  font-size: 14px;
-  opacity: 0.75;
-}
-
-/* ===== VIDA (FECHA PARA O MEIO) ===== */
-.vida-bar {
+  width: 1920px;           /* 2K */
+  height: 200px;
   position: relative;
-  height: 18px;
-  width: 320px;
-  margin-bottom: 6px;
+  background: transparent;
 }
 
-/* cada lado nasce do centro */
-.vida-half {
+/* HEX NÍVEL */
+.level-hex {
   position: absolute;
   top: 0;
-  height: 100%;
-  width: 50%;
-  background: linear-gradient(90deg, #7a0000, #ff0000);
-  transition: width 0.25s ease;
-}
-
-.vida-half.left {
   left: 50%;
-  transform: translateX(-100%);
-}
-
-.vida-half.right {
-  left: 50%;
-}
-
-/* texto central */
-.vida-text {
-  position: absolute;
-  inset: 0;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 52px;
+  background: transparent;
+  border: 2px solid gold;
+  clip-path: polygon(
+    25% 0%, 75% 0%,
+    100% 50%,
+    75% 100%, 25% 100%,
+    0% 50%
+  );
   display: flex;
   align-items: center;
   justify-content: center;
-
-  font-size: 13px;
-  color: #fff;
-  text-shadow: 0 0 4px #000;
-  pointer-events: none;
 }
 
-/* ===== MANA (SÓ TEXTO) ===== */
+.level-hex span {
+  color: gold;
+  font-size: 20px;
+}
+
+/* NOME */
+.hud-name {
+  position: absolute;
+  top: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: gold;
+  font-size: 28px;
+  letter-spacing: 2px;
+}
+
+/* VIDA */
+.vida-container {
+  position: absolute;
+  top: 105px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 500px;
+  height: 22px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* FECHAMENTO PARA O CENTRO */
+.vida-left,
+.vida-right {
+  position: absolute;
+  top: 0;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(to right, #700000, #c00000);
+  transition: transform 0.4s ease;
+}
+
+.vida-left {
+  left: 0;
+  transform-origin: right center;
+}
+
+.vida-right {
+  right: 0;
+  transform-origin: left center;
+}
+
+/* TEXTO VIDA */
+.vida-text {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  line-height: 22px;
+  color: white;
+  font-size: 14px;
+  z-index: 2;
+}
+
+/* MANA (SÓ NÚMERO) */
 .mana-text {
-  font-size: 13px;
-  color: #6bbcff;
-  text-shadow: 0 0 4px #000;
+  position: absolute;
+  top: 135px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #4db8ff;
+  font-size: 16px;
+}
+
+/* ANIMAÇÕES */
+.hud-damage {
+  animation: damageFlash 0.3s;
+}
+
+.hud-heal {
+  animation: healFlash 0.3s;
+}
+
+@keyframes damageFlash {
+  0% { filter: brightness(1); }
+  50% { filter: brightness(1.5); }
+  100% { filter: brightness(1); }
+}
+
+@keyframes healFlash {
+  0% { filter: brightness(1); }
+  50% { filter: brightness(1.3); }
+  100% { filter: brightness(1); }
 }
