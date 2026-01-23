@@ -1,40 +1,32 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>HUD</title>
-  <meta name="viewport" content="width=600, height=140">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="hud.css" />
 </head>
+<body>
 
-<body class="hud-root">
+<div id="hud">
+  <div class="avatar"></div>
 
-  <div class="hud-cris">
-
-    <!-- AVATAR -->
-    <div class="hud-avatar">
-      <div class="hud-level" id="hudLevel">1</div>
+  <div class="info">
+    <div class="name-line">
+      <span id="hudName">Sem Nome</span>
+      <span id="hudLevel">1</span>
     </div>
 
-    <!-- INFO -->
-    <div class="hud-info">
-      <div class="hud-name" id="hudName">Sem nome</div>
-
-      <!-- VIDA -->
-      <div class="hud-life">
-        <div class="hud-life-bar">
-          <div class="hud-life-fill" id="vidaBar"></div>
-        </div>
-        <span id="vidaText">0/0</span>
-      </div>
-
-      <!-- MANA (APENAS TEXTO) -->
-      <div class="hud-mana-text" id="manaText">0/0</div>
+    <div class="vida-bar">
+      <div class="vida-half left"></div>
+      <div class="vida-half right"></div>
+      <div class="vida-text" id="vidaText">0 / 0</div>
     </div>
 
+    <div class="mana-text" id="manaText">Mana: 0 / 0</div>
   </div>
+</div>
 
-  <script src="/socket.io/socket.io.js"></script>
-  <script src="hud.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="hud.js"></script>
 </body>
 </html>
