@@ -13,12 +13,24 @@ const hudId = session.hudId;
 const socket = io();
 socket.emit("joinHUD", hudId);
 
-/* ===== ELEMENTOS (BLINDADO) ===== */
+/* ===== ELEMENTOS ===== */
 const openHudBtn = document.getElementById("openHudBtn");
 const applyBtn = document.getElementById("applyBtn");
 
+const charNameEl = document.getElementById("charName");
+const charLevelEl = document.getElementById("charLevel");
+
+const vidaAtualEl = document.getElementById("vidaAtual");
+const vidaMaxEl = document.getElementById("vidaMax");
+
+const manaAtualEl = document.getElementById("manaAtual");
+const manaMaxEl = document.getElementById("manaMax");
+
+const themeEl = document.getElementById("theme");
+const hudIconEl = document.getElementById("hudIconInput");
+
 if (!openHudBtn || !applyBtn) {
-  console.error("Botões não encontrados no DOM");
+  console.error("Botões principais não encontrados no DOM");
 }
 
 /* ===== ABRIR HUD ===== */
@@ -28,20 +40,24 @@ openHudBtn.addEventListener("click", () => {
   window.open(url, "_blank");
 });
 
-/* ===== APLICAR ===== */
+/* ===== APLICAR ESTADO NO HUD ===== */
 applyBtn.addEventListener("click", () => {
   const state = {
-    name: document.getElementById("charName").value || "Sem Nome",
-    level: Number(document.getElementById("charLevel").value) || 1,
+    name: charNameEl.value || "Sem Nome",
+    level: Number(charLevelEl.value) || 1,
 
-    vidaAtual: Number(document.getElementById("vidaAtual").value),
-    vidaMax: Number(document.getElementById("vidaMax").value),
+    vidaAtual: Number(vidaAtualEl.value),
+    vidaMax: Number(vidaMaxEl.value),
 
-    manaAtual: Number(document.getElementById("manaAtual").value),
-    manaMax: Number(document.getElementById("manaMax").value),
+    manaAtual: Number(manaAtualEl.value),
+    manaMax: Number(manaMaxEl.value),
 
-    theme: document.getElementById("theme").value || "dark"
+    /* 🔥 VISUAL */
+    theme: themeEl?.value || "dark",
+    icon: hudIconEl?.value?.trim() || null
   };
+
+  console.log("📤 Enviando estado para HUD:", state);
 
   socket.emit("updateState", { hudId, state });
 });
