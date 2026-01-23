@@ -6,39 +6,39 @@
 }
 
 body {
-  background: transparent; /* OBS FRIENDLY */
+  background: transparent;
   overflow: hidden;
   font-family: "Cinzel", serif;
 }
 
-/* ===== HUD CONTAINER ===== */
+/* ===== HUD ===== */
 #hud {
   display: flex;
   align-items: center;
-  gap: 32px;
+  gap: 18px;
 
-  padding: 40px;
-  transform: scale(1.4); /* ESCALA GRANDE (2K/OBS) */
+  padding: 20px;
+  transform: scale(1.1); /* compacto */
   transform-origin: top left;
 
   transition: filter 0.25s ease;
 }
 
-/* ===== ANIMAÇÕES ===== */
+/* ===== FEEDBACK ===== */
 #hud.hud-damage {
-  filter: drop-shadow(0 0 18px rgba(255, 0, 0, 0.8));
+  filter: drop-shadow(0 0 14px rgba(255, 0, 0, 0.9));
 }
 
 #hud.hud-heal {
-  filter: drop-shadow(0 0 18px rgba(0, 255, 120, 0.8));
+  filter: drop-shadow(0 0 14px rgba(0, 255, 140, 0.9));
 }
 
 /* ===== AVATAR ===== */
 .avatar {
-  width: 110px;
-  height: 110px;
+  width: 72px;
+  height: 72px;
   border-radius: 50%;
-  border: 4px solid gold;
+  border: 3px solid gold;
   background-image: var(--avatar-url);
   background-size: cover;
   background-position: center;
@@ -46,52 +46,52 @@ body {
 
 /* ===== INFO ===== */
 .info {
-  min-width: 520px;
+  width: 360px;
 }
 
 /* ===== NOME ===== */
 .name-line {
   display: flex;
-  gap: 12px;
+  gap: 8px;
   align-items: baseline;
   color: gold;
-  font-size: 28px;
-  margin-bottom: 12px;
+  font-size: 20px;
+  margin-bottom: 6px;
 }
 
 #hudLevel {
-  font-size: 18px;
-  opacity: 0.8;
+  font-size: 14px;
+  opacity: 0.75;
 }
 
-/* ===== VIDA ===== */
+/* ===== VIDA (FECHA PARA O MEIO) ===== */
 .vida-bar {
   position: relative;
-  height: 28px;
-  width: 500px;
-  margin-bottom: 8px;
+  height: 18px;
+  width: 320px;
+  margin-bottom: 6px;
 }
 
+/* cada lado nasce do centro */
 .vida-half {
   position: absolute;
   top: 0;
   height: 100%;
   width: 50%;
   background: linear-gradient(90deg, #7a0000, #ff0000);
-  transform-origin: center;
-  transition: transform 0.3s ease;
+  transition: width 0.25s ease;
 }
 
 .vida-half.left {
   left: 50%;
-  transform-origin: right center;
+  transform: translateX(-100%);
 }
 
 .vida-half.right {
-  right: 50%;
-  transform-origin: left center;
+  left: 50%;
 }
 
+/* texto central */
 .vida-text {
   position: absolute;
   inset: 0;
@@ -99,15 +99,15 @@ body {
   align-items: center;
   justify-content: center;
 
-  font-size: 16px;
+  font-size: 13px;
   color: #fff;
-  text-shadow: 0 0 6px #000;
+  text-shadow: 0 0 4px #000;
   pointer-events: none;
 }
 
-/* ===== MANA ===== */
+/* ===== MANA (SÓ TEXTO) ===== */
 .mana-text {
-  font-size: 16px;
+  font-size: 13px;
   color: #6bbcff;
-  text-shadow: 0 0 6px #000;
+  text-shadow: 0 0 4px #000;
 }
