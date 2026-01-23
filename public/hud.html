@@ -1,29 +1,28 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>HUD</title>
-  <link rel="stylesheet" href="hud.css" />
+  <link rel="stylesheet" href="hud.css">
 </head>
 <body>
 
 <div id="hud">
-  <div class="avatar"></div>
 
-  <div class="info">
-    <div class="name-line">
-      <span id="hudName">Sem Nome</span>
-      <span id="hudLevel">1</span>
-    </div>
-
-    <div class="vida-bar">
-      <div class="vida-half left"></div>
-      <div class="vida-half right"></div>
-      <div class="vida-text" id="vidaText">0 / 0</div>
-    </div>
-
-    <div class="mana-text" id="manaText">Mana: 0 / 0</div>
+  <div class="level-hex">
+    <span id="hudLevel">1</span>
   </div>
+
+  <div class="hud-name" id="hudName">Sem Nome</div>
+
+  <div class="vida-container">
+    <div class="vida-left"></div>
+    <div class="vida-right"></div>
+    <div class="vida-text" id="vidaText">0 / 0</div>
+  </div>
+
+  <div class="mana-text" id="manaText">0 / 0</div>
+
 </div>
 
 <script src="/socket.io/socket.io.js"></script>
