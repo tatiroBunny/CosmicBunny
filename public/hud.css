@@ -1,110 +1,119 @@
-html, body {
-  margin: 0;
-  padding: 0;
-  width: 2560px;
-  height: 1440px;
+body {
   background: transparent;
-  overflow: hidden;
-  font-family: serif;
 }
 
-#hud-root {
-  position: absolute;
-  top: 40px;
-  left: 40px;
+.hud {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 16px;
+  padding: 20px;
 }
 
-/* ÍCONE */
-.hud-icon {
-  position: relative;
-  width: 96px;
-  height: 96px;
+.portrait {
+  width: 90px;
+  height: 90px;
   border-radius: 50%;
-  border: 3px solid gold;
-  overflow: hidden;
+  border: 4px solid #d4af37;
+  box-shadow: 0 0 20px rgba(212,175,55,.6);
+  position: relative;
 }
 
-.hud-icon img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-#hudLevel {
+.level {
   position: absolute;
   bottom: -6px;
   right: -6px;
-  width: 28px;
-  height: 28px;
-  background: black;
-  border: 2px solid gold;
+  background: #000;
+  border: 2px solid #d4af37;
   border-radius: 50%;
-  color: gold;
+  width: 32px;
+  height: 32px;
+  color: #d4af37;
   display: flex;
   align-items: center;
   justify-content: center;
+  font-weight: bold;
 }
 
-/* INFO */
-.hud-info {
-  width: 420px;
+.stats {
+  min-width: 300px;
 }
 
-#hudName {
-  font-size: 22px;
-  margin-bottom: 6px;
+.vida-text {
+  font-size: 42px;
+  color: #e11;
+  text-shadow: 0 0 10px rgba(255,0,0,.6);
 }
 
-/* BARRAS */
-.bar {
-  position: relative;
-  height: 22px;
-  border-radius: 20px;
-  background: rgba(255,255,255,0.12);
-  margin-bottom: 8px;
-  overflow: hidden;
-}
-
-.bar-text {
-  position: absolute;
+.vida-bar {
   width: 100%;
-  text-align: center;
-  line-height: 22px;
-  font-size: 14px;
-  pointer-events: none;
+  height: 14px;
+  background: #300;
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 6px 0;
 }
 
-/* VIDA PRO CENTRO */
-.vida {
-  display: flex;
-}
-
-.bar-half {
-  width: 50%;
+#vidaFill {
   height: 100%;
-  background: linear-gradient(to right, darkred, red);
-  transition: transform 0.35s ease;
+  background: linear-gradient(90deg, #700, #e11);
+  box-shadow: inset 0 0 6px rgba(0,0,0,.8);
+  transition: width .3s ease;
 }
 
-.bar-half.left {
-  transform-origin: right;
+.mana-text {
+  font-size: 22px;
+  color: #4af;
+  text-shadow: 0 0 8px rgba(80,160,255,.7);
+}
+.dice-result {
+    position: absolute;
+    bottom: 12px;
+    left: 50%;
+    transform: translateX(-50%) scale(0.6);
+    opacity: 0;
+    font-size: 42px;
+    font-weight: bold;
+    pointer-events: none;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+}
+.dice-result.show {
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+}
+.dice-result.hide {
+    opacity: 0;
+    transform: translateX(-50%) scale(0.4);
+}
+.dice-result.normal {
+    color: #fff;
+    text-shadow: 0 0 8px rgba(255,255,255,0.4);
+}
+.dice-result.critico {
+    color: #ff3b3b;
+    animation: criticoPulse 0.6s infinite alternate;
+    text-shadow:
+        0 0 10px #ff3b3b,
+        0 0 25px #ff0000;
 }
 
-.bar-half.right {
-  transform-origin: left;
+@keyframes criticoPulse {
+    from {
+        transform: translateX(-50%) scale(1);
+    }
+    to {
+        transform: translateX(-50%) scale(1.2);
+    }
+}
+.dice-result.falha {
+    color: #555;
+    animation: falhaShake 0.4s infinite;
+    text-shadow: 0 0 8px #000;
 }
 
-/* MANA */
-.mana .bar-fill {
-  height: 100%;
-  background: linear-gradient(to right, #3fa9f5, #8fd3ff);
-  transition: width 0.35s ease;
+@keyframes falhaShake {
+    0% { transform: translateX(-50%) translateX(0); }
+    25% { transform: translateX(-50%) translateX(-3px); }
+    50% { transform: translateX(-50%) translateX(3px); }
+    75% { transform: translateX(-50%) translateX(-2px); }
+    100% { transform: translateX(-50%) translateX(0); }
 }
-
-/* TEMAS */
-.theme-dark { color: gold; }
-.theme-blood { color: crimson; }
-.theme-arcane { color: #b38cff; }
