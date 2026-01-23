@@ -3,38 +3,38 @@
 <head>
   <meta charset="UTF-8">
   <title>HUD</title>
-  <meta name="viewport" content="width=600, height=140">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="hud.css">
 </head>
+<body>
 
-<body class="hud-root">
+<div class="hud theme-dark" id="hudRoot">
 
-  <div class="hud-cris">
-
-    <!-- AVATAR -->
-    <div class="hud-avatar">
-      <div class="hud-level" id="hudLevel">1</div>
-    </div>
-
-    <!-- INFO -->
-    <div class="hud-info">
-      <div class="hud-name" id="hudName">Sem nome</div>
-
-      <!-- VIDA -->
-      <div class="hud-life">
-        <div class="hud-life-bar">
-          <div class="hud-life-fill" id="vidaBar"></div>
-        </div>
-        <span id="vidaText">0/0</span>
-      </div>
-
-      <!-- MANA (APENAS TEXTO) -->
-      <div class="hud-mana-text" id="manaText">0/0</div>
-    </div>
-
+  <div class="portrait">
+    <div class="level" id="hudLevel">1</div>
   </div>
 
-  <script src="/socket.io/socket.io.js"></script>
-  <script src="hud.js"></script>
+  <div class="stats">
+    <div class="name" id="hudName">Sem nome</div>
+
+    <!-- VIDA -->
+    <div class="vida-wrapper">
+      <div class="vida-bar">
+        <div class="vida-fill left" id="vidaFillLeft"></div>
+        <div class="vida-fill right" id="vidaFillRight"></div>
+
+        <div class="vida-center-text" id="vidaText">
+          0 / 0
+        </div>
+      </div>
+    </div>
+
+    <!-- MANA -->
+    <div class="mana-text" id="manaText">0 / 0</div>
+  </div>
+
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="hud.js"></script>
 </body>
 </html>
