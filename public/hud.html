@@ -5,31 +5,26 @@
   <title>HUD</title>
   <link rel="stylesheet" href="hud.css">
 </head>
-<body>
+<body class="hud-root">
 
-<div class="hud theme-dark" id="hudRoot">
-
-  <div class="portrait">
-    <div class="level" id="hudLevel">1</div>
+<div id="hud" class="hud-cris">
+  
+  <div class="hud-avatar">
+    <div class="hud-level" id="hudLevel">1</div>
   </div>
 
-  <div class="stats">
-    <div class="name" id="hudName">Sem nome</div>
+  <div class="hud-info">
+    <div class="hud-name" id="hudName">Sem Nome</div>
 
     <!-- VIDA -->
-    <div class="vida-wrapper">
-      <div class="vida-bar">
-        <div class="vida-fill left" id="vidaFillLeft"></div>
-        <div class="vida-fill right" id="vidaFillRight"></div>
-
-        <div class="vida-center-text" id="vidaText">
-          0 / 0
-        </div>
-      </div>
+    <div class="vida-bar">
+      <div class="vida-left"></div>
+      <div class="vida-right"></div>
+      <span class="vida-text" id="vidaText">0 / 0</span>
     </div>
 
     <!-- MANA -->
-    <div class="mana-text" id="manaText">0 / 0</div>
+    <div class="hud-mana-text" id="manaText">Mana: 0 / 0</div>
   </div>
 
 </div>
