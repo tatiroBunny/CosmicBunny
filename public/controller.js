@@ -61,3 +61,49 @@ applyBtn.addEventListener("click", () => {
 
   socket.emit("updateState", { hudId, state });
 });
+/* ===== SESSÃO ===== */
+const sessionRaw = localStorage.getItem("COSMIC_SESSION");
+
+if (!sessionRaw) {
+  alert("Sessão não encontrada.");
+  throw new Error("Sessão inexistente");
+}
+
+const session = JSON.parse(sessionRaw);
+const hudId = session.hudId;
+
+/* ===== SOCKET ===== */
+const socket = io();
+socket.emit("joinHUD", hudId);
+
+/* ===== ELEMENTOS ===== */
+const openHudBtn = document.getElementById("openHudBtn");
+const applyBtn = document.getElementById("applyBtn");
+
+/* ===== ABRIR HUD ===== */
+openHudBtn.onclick = () => {
+  window.open(`hud.html?id=${encodeURIComponent(hudId)}`, "_blank");
+};
+
+/* ===== APLICAR ===== */
+applyBtn.onclick = () => {
+  const vidaAtual = Number(document.getElementById("vidaAtual").value) || 0;
+  const vidaMax   = Number(document.getElementById("vidaMax").value) || 0;
+
+  const state = {
+    name: document.getElementById("charName").value || "Sem Nome",
+    level: Number(document.getElementById("charLevel").value) || 1,
+
+    vidaAtual,
+    vidaMax,
+
+    theme: document.getElementById("theme").value || "dark",
+
+    // 🔥 ÍCONE DO HUD
+    iconUrl: document.getElementById("hudIconInput").value || null
+  };
+
+  socket.emit("updateState", { hudId, state });
+};
+
+
