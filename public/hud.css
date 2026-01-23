@@ -1,162 +1,92 @@
-body {
-  background: transparent;
+body.hud-root {
+  background: transparent !important;
   margin: 0;
-  font-family: serif;
+  overflow: hidden;
+  font-family: "Cinzel", serif;
 }
 
-/* =====================
-   HUD BASE
-===================== */
-
-.hud {
+/* HUD BASE */
+.hud-cris {
   display: flex;
   align-items: center;
-  gap: 16px;
-  padding: 16px 20px;
+  gap: 14px;
+  background: rgba(20,18,18,0.85);
   border-radius: 14px;
-  background: rgba(20, 20, 20, 0.85);
-  backdrop-filter: blur(6px);
+  padding: 10px 14px;
+  box-shadow: 0 0 20px rgba(0,0,0,.7);
 }
 
-/* =====================
-   PORTRAIT
-===================== */
-
-.portrait {
-  width: 90px;
-  height: 90px;
+/* AVATAR */
+.hud-avatar {
+  width: 72px;
+  height: 72px;
   border-radius: 50%;
-  background-image: var(--avatar-url, none);
+  background-image: var(--avatar-url);
   background-size: cover;
   background-position: center;
-  border: 4px solid var(--accent);
-  box-shadow: 0 0 20px var(--glow);
+  border: 2px solid #d4af37;
   position: relative;
 }
 
-.level {
+/* NIVEL */
+.hud-level {
   position: absolute;
   bottom: -6px;
   right: -6px;
-  background: #000;
-  border: 2px solid var(--accent);
+  width: 24px;
+  height: 24px;
+  background: #050403;
+  border: 1px solid #d4af37;
   border-radius: 50%;
-  width: 32px;
-  height: 32px;
-  color: var(--accent);
+  color: #d4af37;
+  font-size: 13px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: bold;
 }
 
-/* =====================
-   STATS
-===================== */
-
-.stats {
-  min-width: 280px;
-}
-
-.name {
-  font-size: 22px;
-  color: var(--accent);
-  margin-bottom: 6px;
-}
-
-/* =====================
-   VIDA – CENTRO
-===================== */
-
-.vida-wrapper {
-  margin-bottom: 6px;
-}
-
-.vida-bar {
-  position: relative;
-  height: 18px;
-  background: #300;
-  border-radius: 12px;
-  overflow: hidden;
-}
-
-.vida-fill {
-  position: absolute;
-  top: 0;
-  height: 100%;
-  width: 50%;
-  transition: transform 0.3s ease;
-}
-
-.vida-fill.left {
-  left: 50%;
-  transform-origin: right center;
-}
-
-.vida-fill.right {
-  right: 50%;
-  transform-origin: left center;
-}
-
-.vida-center-text {
-  position: absolute;
-  inset: 0;
+/* INFO */
+.hud-info {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-  font-size: 14px;
-  color: #fff;
-  text-shadow: 0 0 6px rgba(0,0,0,.8);
-  pointer-events: none;
+  flex-direction: column;
+  gap: 6px;
 }
 
-/* =====================
-   MANA
-===================== */
-
-.mana-text {
-  font-size: 16px;
-  color: #6cf;
+.hud-name {
+  font-size: 18px;
+  color: #e6d6b3;
+  letter-spacing: 1px;
 }
 
-/* =====================
-   TEMAS
-===================== */
-
-.theme-dark {
-  --accent: #d4af37;
-  --glow: rgba(212,175,55,.6);
-  --vida-grad: linear-gradient(90deg, #700, #e11);
-}
-
-.theme-blood {
-  --accent: #ff3b3b;
-  --glow: rgba(255,60,60,.7);
-  --vida-grad: linear-gradient(90deg, #600, #ff0000);
-}
-
-.theme-arcane {
-  --accent: #7aa2ff;
-  --glow: rgba(120,160,255,.7);
-  --vida-grad: linear-gradient(90deg, #355, #7aa2ff);
-}
-
-.theme-dark .vida-fill,
-.theme-blood .vida-fill,
-.theme-arcane .vida-fill {
-  background: var(--vida-grad);
-}
+/* VIDA CENTRAL */
 .vida-bar {
   position: relative;
   width: 220px;
   height: 12px;
-  background: rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.1);
   border-radius: 8px;
   overflow: hidden;
 }
 
-/* texto central */
+.vida-left,
+.vida-right {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 50%;
+  transition: transform 0.35s ease;
+}
+
+.vida-left {
+  left: 0;
+  transform-origin: left;
+}
+
+.vida-right {
+  right: 0;
+  transform-origin: right;
+}
+
 .vida-text {
   position: absolute;
   inset: 0;
@@ -167,28 +97,49 @@ body {
   font-weight: bold;
   color: #fff;
   z-index: 5;
-  pointer-events: none;
 }
 
-/* lados */
-.vida-left,
-.vida-right {
-  position: absolute;
-  top: 0;
-  height: 100%;
-  width: 50%;
-  transition: transform 0.35s ease;
+/* MANA */
+.hud-mana-text {
+  font-size: 14px;
+  color: #4fb8ff;
 }
 
-/* esquerda → centro */
-.vida-left {
-  left: 0;
-  transform-origin: left;
+/* TEMAS */
+body[data-theme="dark"] .vida-left,
+body[data-theme="dark"] .vida-right {
+  background: linear-gradient(90deg, #7a0000, #e01414);
 }
 
-/* direita → centro */
-.vida-right {
-  right: 0;
-  transform-origin: right;
+body[data-theme="blood"] .vida-left,
+body[data-theme="blood"] .vida-right {
+  background: linear-gradient(90deg, #5a0000, #ff0000);
 }
 
+body[data-theme="arcane"] .vida-left,
+body[data-theme="arcane"] .vida-right {
+  background: linear-gradient(90deg, #3a005a, #a855ff);
+}
+
+/* ANIMAÇÕES */
+@keyframes damageShake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  50% { transform: translateX(4px); }
+  75% { transform: translateX(-2px); }
+  100% { transform: translateX(0); }
+}
+
+@keyframes healGlow {
+  0% { box-shadow: 0 0 0 rgba(0,255,150,0); }
+  50% { box-shadow: 0 0 18px rgba(0,255,150,.9); }
+  100% { box-shadow: 0 0 0 rgba(0,255,150,0); }
+}
+
+.hud-damage {
+  animation: damageShake .3s;
+}
+
+.hud-heal {
+  animation: healGlow .4s;
+}
