@@ -1,45 +1,48 @@
-body.hud-root {
-  background: transparent !important;
+html, body {
   margin: 0;
+  padding: 0;
+  width: 2560px;
+  height: 1440px;
+  background: transparent;
   overflow: hidden;
-  font-family: "Cinzel", serif;
+  font-family: serif;
 }
 
-/* HUD BASE */
-.hud-cris {
+#hud-root {
+  position: absolute;
+  top: 40px;
+  left: 40px;
   display: flex;
   align-items: center;
-  gap: 14px;
-  background: rgba(20,18,18,0.85);
-  border-radius: 14px;
-  padding: 10px 14px;
-  box-shadow: 0 0 20px rgba(0,0,0,.7);
+  gap: 20px;
 }
 
-/* AVATAR */
-.hud-avatar {
-  width: 72px;
-  height: 72px;
-  border-radius: 50%;
-  background-image: var(--avatar-url);
-  background-size: cover;
-  background-position: center;
-  border: 2px solid #d4af37;
+/* ÍCONE */
+.hud-icon {
   position: relative;
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  border: 3px solid gold;
+  overflow: hidden;
 }
 
-/* NIVEL */
-.hud-level {
+.hud-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+#hudLevel {
   position: absolute;
   bottom: -6px;
   right: -6px;
-  width: 24px;
-  height: 24px;
-  background: #050403;
-  border: 1px solid #d4af37;
+  width: 28px;
+  height: 28px;
+  background: black;
+  border: 2px solid gold;
   border-radius: 50%;
-  color: #d4af37;
-  font-size: 13px;
+  color: gold;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -47,99 +50,61 @@ body.hud-root {
 
 /* INFO */
 .hud-info {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
+  width: 420px;
 }
 
-.hud-name {
-  font-size: 18px;
-  color: #e6d6b3;
-  letter-spacing: 1px;
+#hudName {
+  font-size: 22px;
+  margin-bottom: 6px;
 }
 
-/* VIDA CENTRAL */
-.vida-bar {
+/* BARRAS */
+.bar {
   position: relative;
-  width: 220px;
-  height: 12px;
-  background: rgba(255,255,255,0.1);
-  border-radius: 8px;
+  height: 22px;
+  border-radius: 20px;
+  background: rgba(255,255,255,0.12);
+  margin-bottom: 8px;
   overflow: hidden;
 }
 
-.vida-left,
-.vida-right {
+.bar-text {
   position: absolute;
-  top: 0;
-  height: 100%;
+  width: 100%;
+  text-align: center;
+  line-height: 22px;
+  font-size: 14px;
+  pointer-events: none;
+}
+
+/* VIDA PRO CENTRO */
+.vida {
+  display: flex;
+}
+
+.bar-half {
   width: 50%;
+  height: 100%;
+  background: linear-gradient(to right, darkred, red);
   transition: transform 0.35s ease;
 }
 
-.vida-left {
-  left: 0;
-  transform-origin: left;
-}
-
-.vida-right {
-  right: 0;
+.bar-half.left {
   transform-origin: right;
 }
 
-.vida-text {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 12px;
-  font-weight: bold;
-  color: #fff;
-  z-index: 5;
+.bar-half.right {
+  transform-origin: left;
 }
 
 /* MANA */
-.hud-mana-text {
-  font-size: 14px;
-  color: #4fb8ff;
+.mana .bar-fill {
+  height: 100%;
+  background: linear-gradient(to right, #3fa9f5, #8fd3ff);
+  transition: width 0.35s ease;
 }
 
 /* TEMAS */
-body[data-theme="dark"] .vida-left,
-body[data-theme="dark"] .vida-right {
-  background: linear-gradient(90deg, #7a0000, #e01414);
-}
-
-body[data-theme="blood"] .vida-left,
-body[data-theme="blood"] .vida-right {
-  background: linear-gradient(90deg, #5a0000, #ff0000);
-}
-
-body[data-theme="arcane"] .vida-left,
-body[data-theme="arcane"] .vida-right {
-  background: linear-gradient(90deg, #3a005a, #a855ff);
-}
-
-/* ANIMAÇÕES */
-@keyframes damageShake {
-  0% { transform: translateX(0); }
-  25% { transform: translateX(-4px); }
-  50% { transform: translateX(4px); }
-  75% { transform: translateX(-2px); }
-  100% { transform: translateX(0); }
-}
-
-@keyframes healGlow {
-  0% { box-shadow: 0 0 0 rgba(0,255,150,0); }
-  50% { box-shadow: 0 0 18px rgba(0,255,150,.9); }
-  100% { box-shadow: 0 0 0 rgba(0,255,150,0); }
-}
-
-.hud-damage {
-  animation: damageShake .3s;
-}
-
-.hud-heal {
-  animation: healGlow .4s;
-}
+.theme-dark { color: gold; }
+.theme-blood { color: crimson; }
+.theme-arcane { color: #b38cff; }
