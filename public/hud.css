@@ -1,20 +1,36 @@
 body {
   background: transparent;
+  margin: 0;
+  font-family: serif;
 }
+
+/* =====================
+   HUD BASE
+===================== */
 
 .hud {
   display: flex;
   align-items: center;
   gap: 16px;
-  padding: 20px;
+  padding: 16px 20px;
+  border-radius: 14px;
+  background: rgba(20, 20, 20, 0.85);
+  backdrop-filter: blur(6px);
 }
+
+/* =====================
+   PORTRAIT
+===================== */
 
 .portrait {
   width: 90px;
   height: 90px;
   border-radius: 50%;
-  border: 4px solid #d4af37;
-  box-shadow: 0 0 20px rgba(212,175,55,.6);
+  background-image: var(--avatar-url, none);
+  background-size: cover;
+  background-position: center;
+  border: 4px solid var(--accent);
+  box-shadow: 0 0 20px var(--glow);
   position: relative;
 }
 
@@ -23,97 +39,111 @@ body {
   bottom: -6px;
   right: -6px;
   background: #000;
-  border: 2px solid #d4af37;
+  border: 2px solid var(--accent);
   border-radius: 50%;
   width: 32px;
   height: 32px;
-  color: #d4af37;
+  color: var(--accent);
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: bold;
 }
 
+/* =====================
+   STATS
+===================== */
+
 .stats {
-  min-width: 300px;
+  min-width: 280px;
 }
 
-.vida-text {
-  font-size: 42px;
-  color: #e11;
-  text-shadow: 0 0 10px rgba(255,0,0,.6);
+.name {
+  font-size: 22px;
+  color: var(--accent);
+  margin-bottom: 6px;
+}
+
+/* =====================
+   VIDA – CENTRO
+===================== */
+
+.vida-wrapper {
+  margin-bottom: 6px;
 }
 
 .vida-bar {
-  width: 100%;
-  height: 14px;
+  position: relative;
+  height: 18px;
   background: #300;
-  border-radius: 10px;
+  border-radius: 12px;
   overflow: hidden;
-  margin: 6px 0;
 }
 
-#vidaFill {
+.vida-fill {
+  position: absolute;
+  top: 0;
   height: 100%;
-  background: linear-gradient(90deg, #700, #e11);
-  box-shadow: inset 0 0 6px rgba(0,0,0,.8);
-  transition: width .3s ease;
+  width: 50%;
+  transition: transform 0.3s ease;
 }
+
+.vida-fill.left {
+  left: 50%;
+  transform-origin: right center;
+}
+
+.vida-fill.right {
+  right: 50%;
+  transform-origin: left center;
+}
+
+.vida-center-text {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 14px;
+  color: #fff;
+  text-shadow: 0 0 6px rgba(0,0,0,.8);
+  pointer-events: none;
+}
+
+/* =====================
+   MANA
+===================== */
 
 .mana-text {
-  font-size: 22px;
-  color: #4af;
-  text-shadow: 0 0 8px rgba(80,160,255,.7);
-}
-.dice-result {
-    position: absolute;
-    bottom: 12px;
-    left: 50%;
-    transform: translateX(-50%) scale(0.6);
-    opacity: 0;
-    font-size: 42px;
-    font-weight: bold;
-    pointer-events: none;
-    transition: opacity 0.4s ease, transform 0.4s ease;
-}
-.dice-result.show {
-    opacity: 1;
-    transform: translateX(-50%) scale(1);
-}
-.dice-result.hide {
-    opacity: 0;
-    transform: translateX(-50%) scale(0.4);
-}
-.dice-result.normal {
-    color: #fff;
-    text-shadow: 0 0 8px rgba(255,255,255,0.4);
-}
-.dice-result.critico {
-    color: #ff3b3b;
-    animation: criticoPulse 0.6s infinite alternate;
-    text-shadow:
-        0 0 10px #ff3b3b,
-        0 0 25px #ff0000;
+  font-size: 16px;
+  color: #6cf;
 }
 
-@keyframes criticoPulse {
-    from {
-        transform: translateX(-50%) scale(1);
-    }
-    to {
-        transform: translateX(-50%) scale(1.2);
-    }
-}
-.dice-result.falha {
-    color: #555;
-    animation: falhaShake 0.4s infinite;
-    text-shadow: 0 0 8px #000;
+/* =====================
+   TEMAS
+===================== */
+
+.theme-dark {
+  --accent: #d4af37;
+  --glow: rgba(212,175,55,.6);
+  --vida-grad: linear-gradient(90deg, #700, #e11);
 }
 
-@keyframes falhaShake {
-    0% { transform: translateX(-50%) translateX(0); }
-    25% { transform: translateX(-50%) translateX(-3px); }
-    50% { transform: translateX(-50%) translateX(3px); }
-    75% { transform: translateX(-50%) translateX(-2px); }
-    100% { transform: translateX(-50%) translateX(0); }
+.theme-blood {
+  --accent: #ff3b3b;
+  --glow: rgba(255,60,60,.7);
+  --vida-grad: linear-gradient(90deg, #600, #ff0000);
+}
+
+.theme-arcane {
+  --accent: #7aa2ff;
+  --glow: rgba(120,160,255,.7);
+  --vida-grad: linear-gradient(90deg, #355, #7aa2ff);
+}
+
+.theme-dark .vida-fill,
+.theme-blood .vida-fill,
+.theme-arcane .vida-fill {
+  background: var(--vida-grad);
 }
