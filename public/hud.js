@@ -1,37 +1,67 @@
 const socket = io();
-const hudId = new URLSearchParams(location.search).get("id");
 
-if (!hudId) {
-  document.body.innerHTML = "HUD sem ID";
-  throw new Error("HUD ID ausente");
-}
+const params = new URLSearchParams(window.location.search);
+const hudId = params.get("id");
 
 socket.emit("joinHUD", hudId);
 
+const hud = document.getElementById("hud");
+const hudName = document.getElementById("hudName");
+const hudLevel = document.getElementById("hudLevel");
+const vidaText = document.getElementById("vidaText");
+const manaText = document.getElementById("manaText");
+
+const vidaLeft = document.querySelector(".vida-half.left");
+const vidaRight = document.querySelector(".vida-half.right");
+
+let ultimaVida = null;
+
+function atualizarVida(atual, max) {
+  if (!max || max <= 0) {
+    vidaText.textContent = "0 / 0";
+    vidaLeft.style.transform = "scaleX(0)";
+    vidaRight.style.transform = "scaleX(0)";
+    return;
+  }
+
+  const pct = Math.max(0, Math.min(1, atual / max));
+
+  vidaLeft.style.transform = `scaleX(${pct})`;
+  vidaRight.style.transform = `scaleX(${pct})`;
+
+  vidaText.textContent = `${atual} / ${max}`;
+}
+
 socket.on("stateSync", state => {
+  if (!state) return;
 
-  // Nome e nível
-  hudName.textContent = state.name || "Sem nome";
-  hudLevel.textContent = state.level || "1";
+  hudName.textContent = state.name || "Sem Nome";
+  hudLevel.textContent = state.level || 1;
 
-  // VIDA
-  const vidaAtual = state.vidaAtual ?? 0;
-  const vidaMax = state.vidaMax ?? 0;
-  const vidaPerc = vidaMax ? (vidaAtual / vidaMax) * 100 : 0;
+  manaText.textContent = `Mana: ${state.manaAtual ?? 0} / ${state.manaMax ?? 0}`;
 
-  vidaBar.style.width = `${vidaPerc}%`;
-  vidaText.textContent = `${vidaAtual}/${vidaMax}`;
-
-  // MANA (SÓ TEXTO)
-  const manaAtual = state.manaAtual ?? 0;
-  const manaMax = state.manaMax ?? 0;
-  manaText.textContent = `${manaAtual}/${manaMax}`;
-
-  // Avatar
-  if (state.avatar) {
+  // ÍCONE
+  if (state.icon) {
     document.documentElement.style.setProperty(
       "--avatar-url",
-      `url(${state.avatar})`
+      `url("${state.icon}")`
     );
   }
+
+  // DANO / CURA
+  if (ultimaVida !== null) {
+    if (state.vidaAtual < ultimaVida) {
+      hud.classList.add("hud-damage");
+    } else if (state.vidaAtual > ultimaVida) {
+      hud.classList.add("hud-heal");
+    }
+
+    setTimeout(() => {
+      hud.classList.remove("hud-damage", "hud-heal");
+    }, 300);
+  }
+
+  ultimaVida = state.vidaAtual;
+
+  atualizarVida(state.vidaAtual, state.vidaMax);
 });
