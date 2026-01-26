@@ -7,10 +7,10 @@ socket.emit("joinHUD", hudId);
 
 const hud = document.getElementById("hud");
 const hudName = document.getElementById("hudName");
-const hudLevel = document.getElementById("hudLevel");
 const vidaFill = document.getElementById("vidaFill");
 const vidaText = document.getElementById("vidaText");
 const manaText = document.getElementById("manaText");
+const levelEl = document.querySelector(".level");
 
 let ultimaVida = null;
 
@@ -30,11 +30,9 @@ socket.on("stateSync", state => {
   if (!state) return;
 
   hudName.textContent = state.name || "Sem Nome";
-  hudLevel.textContent = state.level || 1;
+  levelEl.textContent = state.level || 1;
 
   manaText.textContent = `${state.manaAtual ?? 0} / ${state.manaMax ?? 0}`;
-
-  document.body.dataset.theme = state.theme || "dark";
 
   if (ultimaVida !== null) {
     if (state.vidaAtual < ultimaVida) {
@@ -45,7 +43,7 @@ socket.on("stateSync", state => {
 
     setTimeout(() => {
       hud.classList.remove("dano", "cura");
-    }, 300);
+    }, 250);
   }
 
   ultimaVida = state.vidaAtual;
