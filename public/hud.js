@@ -8,18 +8,21 @@ socket.emit("joinHUD", hudId);
 const hud = document.getElementById("hud");
 const hudName = document.getElementById("hudName");
 const hudLevel = document.getElementById("hudLevel");
+const vidaFill = document.getElementById("vidaFill");
 const vidaText = document.getElementById("vidaText");
 const manaText = document.getElementById("manaText");
-
-const vidaLeft = document.querySelector(".vida-left");
-const vidaRight = document.querySelector(".vida-right");
 
 let ultimaVida = null;
 
 function atualizarVida(atual, max) {
-  const pct = max > 0 ? atual / max : 0;
-  vidaLeft.style.transform = `scaleX(${pct})`;
-  vidaRight.style.transform = `scaleX(${pct})`;
+  if (!max || max <= 0) {
+    vidaFill.style.width = "0%";
+    vidaText.textContent = "0 / 0";
+    return;
+  }
+
+  const pct = Math.max(0, Math.min(1, atual / max));
+  vidaFill.style.width = `${pct * 100}%`;
   vidaText.textContent = `${atual} / ${max}`;
 }
 
@@ -31,19 +34,20 @@ socket.on("stateSync", state => {
 
   manaText.textContent = `${state.manaAtual ?? 0} / ${state.manaMax ?? 0}`;
 
-  // dano / cura
+  document.body.dataset.theme = state.theme || "dark";
+
   if (ultimaVida !== null) {
     if (state.vidaAtual < ultimaVida) {
-      hud.classList.add("hud-damage");
+      hud.classList.add("dano");
     } else if (state.vidaAtual > ultimaVida) {
-      hud.classList.add("hud-heal");
+      hud.classList.add("cura");
     }
 
     setTimeout(() => {
-      hud.classList.remove("hud-damage", "hud-heal");
+      hud.classList.remove("dano", "cura");
     }, 300);
   }
 
   ultimaVida = state.vidaAtual;
-  atualizarVida(state.vidaAtual ?? 0, state.vidaMax ?? 0);
+  atualizarVida(state.vidaAtual, state.vidaMax);
 });
