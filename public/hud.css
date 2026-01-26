@@ -1,4 +1,3 @@
-/* ===== RESET ===== */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -10,57 +9,52 @@ body {
   font-family: "Cinzel", serif;
 }
 
-/* ===== HUD BASE ===== */
 .hud {
-  width: 640px;
-  height: 110px;
+  width: 260px;
+  height: 90px;
+  padding: 6px 8px;
   display: flex;
-  align-items: center;
-  gap: 14px;
-  background: transparent;
-  position: relative;
+  flex-direction: column;
+  gap: 6px;
+  color: #d8cfa8;
 }
 
-/* ===== LEVEL HEX ===== */
-.level-hex {
-  width: 44px;
-  height: 44px;
+/* ===== TOPO ===== */
+.top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.level {
+  width: 26px;
+  height: 26px;
   clip-path: polygon(
-    25% 6%, 75% 6%,
+    25% 5%, 75% 5%,
     100% 50%,
-    75% 94%, 25% 94%,
+    75% 95%, 25% 95%,
     0% 50%
   );
-  background: var(--accent);
+  background: #c9a23f;
+  color: #000;
+  font-size: 14px;
+  font-weight: bold;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.level-hex span {
-  color: #000;
-  font-weight: bold;
-  font-size: 18px;
-}
-
-/* ===== INFO ===== */
-.info {
-  flex: 1;
-}
-
-/* ===== NAME ===== */
 .name {
-  color: var(--accent);
-  font-size: 22px;
-  margin-bottom: 6px;
-  text-shadow: 0 0 6px rgba(0,0,0,.8);
+  font-size: 15px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
 }
 
 /* ===== VIDA ===== */
 .vida-bar {
   position: relative;
   width: 100%;
-  height: 18px;
+  height: 10px;
   background: rgba(255,255,255,0.08);
   overflow: hidden;
 }
@@ -68,64 +62,23 @@ body {
 .vida-fill {
   height: 100%;
   width: 100%;
-  background: var(--vida);
-  transition: width .35s ease;
+  background: #7b0000;
+  transition: width 0.35s ease;
 }
 
 .vida-text {
   position: absolute;
   inset: 0;
+  font-size: 11px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 14px;
-  color: #fff;
+  color: #eee;
   text-shadow: 0 0 4px #000;
 }
 
-/* ===== MANA (SÓ NÚMERO) ===== */
-.mana-text {
-  margin-top: 4px;
-  font-size: 14px;
-  color: var(--mana);
-}
-
-/* ===== ANIMAÇÕES ===== */
-.hud.dano {
-  animation: danoFlash .3s;
-}
-
-.hud.cura {
-  animation: curaFlash .3s;
-}
-
-@keyframes danoFlash {
-  0% { filter: drop-shadow(0 0 0 red); }
-  50% { filter: drop-shadow(0 0 10px red); }
-  100% { filter: drop-shadow(0 0 0 red); }
-}
-
-@keyframes curaFlash {
-  0% { filter: drop-shadow(0 0 0 gold); }
-  50% { filter: drop-shadow(0 0 10px gold); }
-  100% { filter: drop-shadow(0 0 0 gold); }
-}
-
-/* ===== TEMAS ===== */
-body[data-theme="dark"] {
-  --vida: #b00000;
-  --mana: #4aa3ff;
-  --accent: #ffd700;
-}
-
-body[data-theme="blood"] {
-  --vida: #8b0000;
-  --mana: #ff4a4a;
-  --accent: #ff2a2a;
-}
-
-body[data-theme="arcane"] {
-  --vida: #6b2cff;
-  --mana: #4ad7ff;
-  --accent: #b18bff;
-}
+/* ===== MANA ===== */
+.mana {
+  font-size: 12px;
+  color: #6fa3ff;
+  text-align: right;
