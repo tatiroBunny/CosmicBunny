@@ -1,28 +1,25 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <title>HUD</title>
-  <link rel="stylesheet" href="hud.css" />
+  <meta charset="UTF-8">
+  <title>HUD Player</title>
+  <link rel="stylesheet" href="hud.css">
 </head>
 <body>
 
 <div id="hud" class="hud">
 
-  <div class="level-hex">
-    <span id="hudLevel">1</span>
-  </div>
-
-  <div class="info">
+  <div class="top">
+    <div class="level">5</div>
     <div id="hudName" class="name">Sem Nome</div>
-
-    <div class="vida-bar">
-      <div class="vida-fill" id="vidaFill"></div>
-      <div class="vida-text" id="vidaText">0 / 0</div>
-    </div>
-
-    <div id="manaText" class="mana-text">0 / 0</div>
   </div>
+
+  <div class="vida-bar">
+    <div id="vidaFill" class="vida-fill"></div>
+    <span id="vidaText" class="vida-text">0 / 0</span>
+  </div>
+
+  <div id="manaText" class="mana">0 / 0</div>
 
 </div>
 
