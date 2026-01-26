@@ -1,132 +1,131 @@
-/* RESET */
-html, body {
+/* ===== RESET ===== */
+* {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
+}
+
+body {
   background: transparent;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
   font-family: "Cinzel", serif;
 }
 
-/* HUD BASE */
-#hud {
-  width: 1920px;           /* 2K */
-  height: 200px;
-  position: relative;
+/* ===== HUD BASE ===== */
+.hud {
+  width: 640px;
+  height: 110px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
   background: transparent;
+  position: relative;
 }
 
-/* HEX NÍVEL */
+/* ===== LEVEL HEX ===== */
 .level-hex {
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 60px;
-  height: 52px;
-  background: transparent;
-  border: 2px solid gold;
+  width: 44px;
+  height: 44px;
   clip-path: polygon(
-    25% 0%, 75% 0%,
+    25% 6%, 75% 6%,
     100% 50%,
-    75% 100%, 25% 100%,
+    75% 94%, 25% 94%,
     0% 50%
   );
+  background: var(--accent);
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .level-hex span {
-  color: gold;
-  font-size: 20px;
+  color: #000;
+  font-weight: bold;
+  font-size: 18px;
 }
 
-/* NOME */
-.hud-name {
-  position: absolute;
-  top: 60px;
-  left: 50%;
-  transform: translateX(-50%);
-  color: gold;
-  font-size: 28px;
-  letter-spacing: 2px;
+/* ===== INFO ===== */
+.info {
+  flex: 1;
 }
 
-/* VIDA */
-.vida-container {
-  position: absolute;
-  top: 105px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 500px;
-  height: 22px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
+/* ===== NAME ===== */
+.name {
+  color: var(--accent);
+  font-size: 22px;
+  margin-bottom: 6px;
+  text-shadow: 0 0 6px rgba(0,0,0,.8);
+}
+
+/* ===== VIDA ===== */
+.vida-bar {
+  position: relative;
+  width: 100%;
+  height: 18px;
+  background: rgba(255,255,255,0.08);
   overflow: hidden;
 }
 
-/* FECHAMENTO PARA O CENTRO */
-.vida-left,
-.vida-right {
-  position: absolute;
-  top: 0;
-  width: 50%;
+.vida-fill {
   height: 100%;
-  background: linear-gradient(to right, #700000, #c00000);
-  transition: transform 0.4s ease;
+  width: 100%;
+  background: var(--vida);
+  transition: width .35s ease;
 }
 
-.vida-left {
-  left: 0;
-  transform-origin: right center;
-}
-
-.vida-right {
-  right: 0;
-  transform-origin: left center;
-}
-
-/* TEXTO VIDA */
 .vida-text {
   position: absolute;
-  width: 100%;
-  height: 100%;
-  text-align: center;
-  line-height: 22px;
-  color: white;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-size: 14px;
-  z-index: 2;
+  color: #fff;
+  text-shadow: 0 0 4px #000;
 }
 
-/* MANA (SÓ NÚMERO) */
+/* ===== MANA (SÓ NÚMERO) ===== */
 .mana-text {
-  position: absolute;
-  top: 135px;
-  left: 50%;
-  transform: translateX(-50%);
-  color: #4db8ff;
-  font-size: 16px;
+  margin-top: 4px;
+  font-size: 14px;
+  color: var(--mana);
 }
 
-/* ANIMAÇÕES */
-.hud-damage {
-  animation: damageFlash 0.3s;
+/* ===== ANIMAÇÕES ===== */
+.hud.dano {
+  animation: danoFlash .3s;
 }
 
-.hud-heal {
-  animation: healFlash 0.3s;
+.hud.cura {
+  animation: curaFlash .3s;
 }
 
-@keyframes damageFlash {
-  0% { filter: brightness(1); }
-  50% { filter: brightness(1.5); }
-  100% { filter: brightness(1); }
+@keyframes danoFlash {
+  0% { filter: drop-shadow(0 0 0 red); }
+  50% { filter: drop-shadow(0 0 10px red); }
+  100% { filter: drop-shadow(0 0 0 red); }
 }
 
-@keyframes healFlash {
-  0% { filter: brightness(1); }
-  50% { filter: brightness(1.3); }
-  100% { filter: brightness(1); }
+@keyframes curaFlash {
+  0% { filter: drop-shadow(0 0 0 gold); }
+  50% { filter: drop-shadow(0 0 10px gold); }
+  100% { filter: drop-shadow(0 0 0 gold); }
+}
+
+/* ===== TEMAS ===== */
+body[data-theme="dark"] {
+  --vida: #b00000;
+  --mana: #4aa3ff;
+  --accent: #ffd700;
+}
+
+body[data-theme="blood"] {
+  --vida: #8b0000;
+  --mana: #ff4a4a;
+  --accent: #ff2a2a;
+}
+
+body[data-theme="arcane"] {
+  --vida: #6b2cff;
+  --mana: #4ad7ff;
+  --accent: #b18bff;
 }
