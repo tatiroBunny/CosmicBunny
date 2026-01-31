@@ -1,26 +1,31 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <title>HUD Player</title>
-  <link rel="stylesheet" href="hud.css">
+  <meta charset="UTF-8" />
+  <title>HUD</title>
+  <link rel="stylesheet" href="hud.css" />
 </head>
 <body>
 
-<div id="hud" class="hud">
+<div id="hud">
+  <div class="hud-content">
 
-  <div class="top">
-    <div class="level">5</div>
-    <div id="hudName" class="name">Sem Nome</div>
+    <!-- LEVEL -->
+    <div id="hudLevel">1</div>
+
+    <!-- NAME -->
+    <div id="hudName">SEM NOME</div>
+
+    <!-- LIFE BAR -->
+    <div class="vida-bar">
+      <div class="vida-fill"></div>
+      <div class="vida-text">0 / 0</div>
+    </div>
+
+    <!-- MANA (SÓ NÚMEROS) -->
+    <div class="mana-text">0 / 0</div>
+
   </div>
-
-  <div class="vida-bar">
-    <div id="vidaFill" class="vida-fill"></div>
-    <span id="vidaText" class="vida-text">0 / 0</span>
-  </div>
-
-  <div id="manaText" class="mana">0 / 0</div>
-
 </div>
 
 <script src="/socket.io/socket.io.js"></script>
