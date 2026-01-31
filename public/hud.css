@@ -1,100 +1,15 @@
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  background: transparent;
-  font-family: "Cinzel", serif;
-}
-
-.hud {
-  width: 260px;
-  height: 90px;
-  padding: 6px 8px;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  color: #d8cfa8;
-}
-
-/* ===== TOPO ===== */
-.top {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.level {
-  width: 26px;
-  height: 26px;
-  clip-path: polygon(
-    25% 5%, 75% 5%,
-    100% 50%,
-    75% 95%, 25% 95%,
-    0% 50%
-  );
-  background: #c9a23f;
-  color: #000;
-  font-size: 14px;
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.name {
-  font-size: 15px;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-}
-
-/* ===== VIDA ===== */
-.vida-bar {
-  position: relative;
-  width: 100%;
-  height: 10px;
-  background: rgba(255,255,255,0.08);
-  overflow: hidden;
-}
-
-.vida-fill {
-  height: 100%;
-  width: 100%;
-  background: #7b0000;
-  transition: width 0.35s ease;
-}
-
-.vida-text {
-  position: absolute;
-  inset: 0;
-  font-size: 11px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #eee;
-  text-shadow: 0 0 4px #000;
-}
-
-/* ===== MANA ===== */
-.mana {
-  font-size: 12px;
-  color: #6fa3ff;
-  text-align: right;
-
-  /* ===== RESET ===== */
+/* ===== RESET TOTAL ===== */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-/* ===== CANVAS FULL HD TRANSPARENTE ===== */
-body {
+/* ===== TRANSPARÊNCIA REAL (ESSENCIAL PRO OBS) ===== */
+html, body {
   width: 1920px;
   height: 1080px;
-  background: transparent;
+  background: transparent !important;
   overflow: hidden;
   font-family: "Cinzel", serif;
 }
@@ -102,30 +17,28 @@ body {
 /* ===== HUD ROOT ===== */
 #hud {
   position: absolute;
-  left: 0;
-  top: 0;
-  width: 1920px;
-  height: 1080px;
+  inset: 0;
+  background: transparent;
   pointer-events: none;
 }
 
-/* ===== POSIÇÃO BASE (AJUSTE NO OBS) ===== */
+/* ===== BLOCO DO PLAYER ===== */
 .hud-content {
   position: absolute;
   left: 120px;
   bottom: 120px;
 
-  width: 420px;
+  width: 360px;          /* <<< LIMITA O TAMANHO */
   display: flex;
   flex-direction: column;
   gap: 6px;
 }
 
-/* ===== LEVEL (HEX SIMPLES) ===== */
+/* ===== LEVEL ===== */
 #hudLevel {
   align-self: center;
-  width: 36px;
-  height: 36px;
+  width: 34px;
+  height: 34px;
 
   clip-path: polygon(
     25% 5%, 75% 5%,
@@ -137,7 +50,7 @@ body {
   border: 1px solid #d4af37;
 
   color: #ffd97a;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: bold;
 
   display: flex;
@@ -148,23 +61,25 @@ body {
 /* ===== NAME ===== */
 #hudName {
   text-align: center;
-  font-size: 20px;
+  font-size: 18px;
   letter-spacing: 2px;
   color: #ffd97a;
-  text-shadow: 0 0 6px rgba(212,175,55,0.6);
+  text-shadow: 0 0 8px rgba(212,175,55,0.7);
 }
 
 /* ===== VIDA ===== */
 .vida-bar {
   position: relative;
-  height: 14px;
-  background: rgba(60,0,0,0.5);
+  width: 100%;          /* agora respeita o container */
+  height: 12px;
+
+  background: rgba(60,0,0,0.35);
   border: 1px solid #3a0b0b;
 }
 
 .vida-fill {
   height: 100%;
-  width: 100%;
+  width: 0%;
   background: linear-gradient(90deg, #6b0000, #c00000);
   transition: width 0.35s ease;
 }
@@ -176,15 +91,15 @@ body {
   align-items: center;
   justify-content: center;
 
-  font-size: 12px;
+  font-size: 11px;
   color: #f5dede;
   text-shadow: 0 0 4px #000;
 }
 
-/* ===== MANA ===== */
+/* ===== MANA (SÓ NÚMERO) ===== */
 .mana-text {
   text-align: center;
-  font-size: 12px;
+  font-size: 11px;
   color: #7fbfff;
 }
 
@@ -204,4 +119,3 @@ body {
   75% { transform: translateX(-2px); }
   100% { transform: translateX(0); }
 }
-
