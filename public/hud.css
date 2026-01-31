@@ -70,7 +70,7 @@ html, body {
 /* ===== VIDA ===== */
 .vida-bar {
   position: relative;
-  width: 100%;          /* agora respeita o container */
+  width: 40%;          /* agora respeita o container */
   height: 12px;
 
   background: rgba(60,0,0,0.35);
@@ -119,3 +119,4 @@ html, body {
   75% { transform: translateX(-2px); }
   100% { transform: translateX(0); }
 }
+
