@@ -7,19 +7,15 @@ socket.emit("joinHUD", hudId);
 
 const hud = document.getElementById("hud");
 const hudName = document.getElementById("hudName");
-const vidaFill = document.getElementById("vidaFill");
-const vidaText = document.getElementById("vidaText");
-const manaText = document.getElementById("manaText");
-const levelEl = document.querySelector(".level");
+const hudLevel = document.getElementById("hudLevel");
+const vidaFill = document.querySelector(".vida-fill");
+const vidaText = document.querySelector(".vida-text");
+const manaText = document.querySelector(".mana-text");
 
 let ultimaVida = null;
 
 function atualizarVida(atual, max) {
-  if (!max || max <= 0) {
-    vidaFill.style.width = "0%";
-    vidaText.textContent = "0 / 0";
-    return;
-  }
+  if (!max || max <= 0) return;
 
   const pct = Math.max(0, Math.min(1, atual / max));
   vidaFill.style.width = `${pct * 100}%`;
@@ -29,21 +25,21 @@ function atualizarVida(atual, max) {
 socket.on("stateSync", state => {
   if (!state) return;
 
-  hudName.textContent = state.name || "Sem Nome";
-  levelEl.textContent = state.level || 1;
+  hudName.textContent = state.name || "SEM NOME";
+  hudLevel.textContent = state.level || 1;
 
   manaText.textContent = `${state.manaAtual ?? 0} / ${state.manaMax ?? 0}`;
 
   if (ultimaVida !== null) {
     if (state.vidaAtual < ultimaVida) {
-      hud.classList.add("dano");
+      hud.classList.add("hud-damage");
     } else if (state.vidaAtual > ultimaVida) {
-      hud.classList.add("cura");
+      hud.classList.add("hud-heal");
     }
 
     setTimeout(() => {
-      hud.classList.remove("dano", "cura");
-    }, 250);
+      hud.classList.remove("hud-damage", "hud-heal");
+    }, 300);
   }
 
   ultimaVida = state.vidaAtual;
